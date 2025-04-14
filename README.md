@@ -1,2 +1,2 @@
 # Quatordle
-Quadruple Wordle
+Victor Ducea, George Small, Henry Vaughan
