@@ -12,17 +12,25 @@ export default class App extends Component {
         originalWordlePage: 'none',
         wordleRules: 'none',
         guess: '',
-        
         wordLength: 5,
         guesses: 6,
         games: 1,
         
+        selectedL3: '#deebcc',
+        selectedL4: 'white',
+        selectedL5: 'white',
+        
+        selectedG1: '#deebcc',
+        selectedG2: 'white',
+        selectedG3: 'white',
+        selectedG4: 'white',
+        
     }
-    handleAccountPagePress = () => this.setState(state => ({
+    handleWordlePagePress = () => this.setState(state => ({
         homeMenuPage: 'none',
         originalWordlePage: 'block',
     }));
-    handlewordleSettingsPagePress = () => this.setState(state => ({
+    handleWordleSettingsPagePress = () => this.setState(state => ({
         homeMenuPage: 'none',
         wordleSettingsPage: 'block',
     }));
@@ -30,10 +38,84 @@ export default class App extends Component {
         homeMenuPage: 'none',
         wordleRules: 'block',
     }));
+    handleSettingsBack = () => this.setState(state => ({
+        homeMenuPage: 'block',
+        wordleSettingsPage: 'none',
+    }));
 
     _handleTextChange = guess => {
         this.setState({ guess });
     };
+    _handleTextChange = guesses => {
+        this.setState({ guesses });
+    };
+    
+    changeWordLength = (value) => {
+        if(value == 3){
+            this.setState(state=> ({
+                wordLength: 3,
+                selectedL3: '#deebcc',
+                selectedL4: 'white',
+                selectedL5: 'white',
+            }))
+        }
+        else if(value == 4){
+            this.setState(state=> ({
+                wordLength: 4,
+                selectedL3: 'white',
+                selectedL4: '#deebcc',
+                selectedL5: 'white',
+            }))
+        }
+        else if(value == 5){
+            this.setState(state=> ({
+                wordLength: 5,
+                selectedL3: 'white',
+                selectedL4: 'white',
+                selectedL5: '#deebcc',
+            }))
+        }
+    }
+    
+     numGameSelect = (value) => {
+        if(value == 1){
+            this.setState(state=> ({
+                games: 1,
+                selectedG1: '#deebcc',
+                selectedG2: 'white',
+                selectedG3: 'white',
+                selectedG4: 'white',
+            }))
+        }
+        else if(value == 2){
+            this.setState(state=> ({
+                games: 2,
+                selectedG1: 'white',
+                selectedG2: '#deebcc',
+                selectedG3: 'white',
+                selectedG4: 'white',
+            }))
+        }
+        else if(value == 3){
+            this.setState(state=> ({
+                games: 3,
+                selectedG1: 'white',
+                selectedG2: 'white',
+                selectedG3: '#deebcc',
+                selectedG4: 'white',
+            }))
+        }
+        else if(value == 4){
+            this.setState(state=> ({
+                games: 4,
+                selectedG1: 'white',
+                selectedG2: 'white',
+                selectedG3: 'white',
+                selectedG4: '#deebcc',
+            }))
+        }
+    }
+    
 
     render() {
         return (
@@ -64,7 +146,7 @@ export default class App extends Component {
                         </View>
                         <View style={styles.versionContainer}>
                             <TouchableHighlight style={styles.startAppButton}
-                                 onPress={this.handlewordleSettingsPagePress}
+                                 onPress={this.handleWordlePagePress}
                             >
                                 <Text style={styles.originalWordleAppText}>
                                     START
@@ -73,7 +155,7 @@ export default class App extends Component {
                             </TouchableHighlight>
                             
                             <TouchableHighlight style={styles.settingsButton}
-                                onPress={this.handlewordleSettingsPagePress}
+                                onPress={this.handleWordleSettingsPagePress}
                             >
                                 <Text style={{fontSize: deviceHeight/26}}>
                                     Game Settings
@@ -143,45 +225,114 @@ export default class App extends Component {
                     </View>
                 </View>
                 <View style={{display: this.state.wordleSettingsPage}}>
-                    <Text style={{fontSize: deviceHeight/18}}>
-                        Settings
-                    </Text>
-                    <Text style={styles.paragraph}>
-                    
-                    </Text>
-                    <View style={styles.container}>
-                        <Text style={styles.paragraph}>
+                    <View style={styles.settingsContainer}>
+                        <View style={{flexDirection: 'row',}}>
+                            <Text style={{fontSize: deviceHeight/18, marginBottom: deviceHeight/18, marginRight: deviceWidth/2.5, fontWeight: 'bold'}}>
+                                Settings
+                            </Text>
+                            <TouchableHighlight style={{marginTop: 8, height: deviceHeight/21}}
+                                onPress={this.handleSettingsBack}
+                            >
+                                <Image
+                                    source={{ uri: 'https://codehs.com/uploads/b7422b5b0eaee5bfdb7d1019881f504f' }}
+                                    style={{ height: deviceHeight/28, width: deviceWidth/7.3 }}
+                                />
+                            
+                            </TouchableHighlight>
+                        </View>
                         
-                        </Text>
-                    
-                    </View>
-                    <Text style={styles.paragraph}>
-                
-                    </Text>
-                    <View style={styles.container}>
-                        <Text style={styles.paragraph}>
+                            <Text style={{fontSize: deviceHeight/20, }}>
+                                Word Length
+                            </Text>
+                            <View style={styles.settingsLine}>
+                            </View>
+                        <View style={styles.optionsContainer}>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedL3}}
+                                onPress={() => this.changeWordLength(3)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    3
+                                </Text>
+                                
+                            </TouchableHighlight>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedL4}}
+                                onPress={() => this.changeWordLength(4)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    4
+                                </Text>
+                                
+                            </TouchableHighlight>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedL5}}
+                                onPress={() => this.changeWordLength(5)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    5
+                                </Text>
+                                
+                            </TouchableHighlight>
+                           
+                        </View>
+                            <Text style={{fontSize: deviceHeight/20, }}>
+                                Guesses
+                            </Text>
+                            <View style={styles.settingsLine}>
+                            </View>
+                        <View style={styles.optionsContainer}>
+                            <TextInput
+                                value={this.state.guesses}
+                                onChangeText={this._handleTextChange}
+                                maxLength={2}
+                                keyBoardType={'numeric'}
+                                
+                                style={{ width: deviceWidth/4, height: deviceWidth/4, padding: 8, borderWidth: 1, fontSize: deviceHeight/18, textAlign: 'center'}}
+                            />
+                            
                         
-                        </Text>
-                    
-                    </View>
-                    <Text style={styles.paragraph}>
-                    
-                    </Text>
-                    <View style={styles.container}>
-                        <Text style={styles.paragraph}>
+                        </View>
+                            <Text style={{fontSize: deviceHeight/20, }}>
+                                Words at a Time
+                            </Text>
+                            <View style={styles.settingsLine}>
+                            </View>
+                        <View style={styles.optionsContainer}>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedG1}}
+                                onPress={() => this.numGameSelect(1)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    1
+                                </Text>
+                                
+                            </TouchableHighlight>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedG2}}
+                                onPress={() => this.numGameSelect(2)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    2
+                                </Text>
+                                
+                            </TouchableHighlight>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedG3}}
+                                onPress={() => this.numGameSelect(3)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    3
+                                </Text>
+                                
+                            </TouchableHighlight>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedG4}}
+                                onPress={() => this.numGameSelect(4)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    4
+                                </Text>
+                                
+                            </TouchableHighlight>
+                            
+                        </View>
                         
-                        </Text>
-                    
                     </View>
-                    
                 </View>
-                <View style={{display: this.state.wordleRulesPage}}>
-                    <Text style={styles.paragraph}>
-                    
-                    </Text>
-                    
-                </View>
-                
                 
             </View>
         );
@@ -274,6 +425,22 @@ const styles = StyleSheet.create({
         borderRadius: 90,
         
     },
+    settingsContainer: 
+    {
+        height: deviceHeight,
+        width: deviceWidth,
+        paddingLeft: 8,
+    },
+    optionsContainer: {
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        height: deviceHeight/4,
+        width: deviceWidth,
+        
+    },
+    optionButton: {
+        height: deviceWidth/4, width: deviceWidth/4,
+    },
     originalWordleAppText: {
         fontSize: deviceHeight/20,
     },
@@ -306,5 +473,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         marginBottom: 5,
     },
+    settingsLine: {
+        height: 1,
+        width: deviceWidth,
+        backgroundColor: 'black',
+    },
     
 });
+
