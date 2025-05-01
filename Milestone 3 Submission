@@ -202,7 +202,7 @@ export default class App extends Component {
                                 </Text>
                             </TouchableHighlight>
                             <TouchableHighlight style={styles.rulesButton}
-                                onPress={this. handleWordleRulesPagePress}
+                                onPress={this.handleWordleRulesPagePress}
                             >
                                 <Text style={{fontSize: deviceHeight/26}}>
                                  Rules
@@ -426,6 +426,7 @@ export default class App extends Component {
                         </View>
                         
                     </View>
+                </View>    
                 <View style={{display: this.state.wordleRules}}>
                     <View style={styles.settingsContainer}>
                         <View style={{flexDirection: 'row',}}>
@@ -444,7 +445,7 @@ export default class App extends Component {
                         </View>
                         <View style={styles.rulesScroll}>
                              <ScrollView>
-                                 <Text style={styles.rulesText}>
+                                <Text style={styles.rulesText}>
                                 ⚫ Each guess must be a valid five-letter word.
                                 </Text>
                                 <Text style={styles.rulesText}> </Text>
@@ -470,8 +471,8 @@ export default class App extends Component {
                     </View>
                 </View> 
                 </View>
-                
-            </View>
+            
+            // </View>
         );
     }
 }
