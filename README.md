@@ -1,4 +1,4 @@
-# Quatordle
+# Wordle+
 Victor Ducea, George Small, Henry Vaughan
 
 A description of the project goals and features:
