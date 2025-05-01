@@ -25,6 +25,43 @@ export default class App extends Component {
         selectedG3: 'white',
         selectedG4: 'white',
         
+        guessArray: 
+        [
+            ['', '' , '', '', '']
+        ],
+        
+        letters1Row: [
+            {letter: 'Q'},
+            {letter: 'W'},
+            {letter: 'E'},
+            {letter: 'R'},
+            {letter: 'T'},
+            {letter: 'Y'},
+            {letter: 'U'},
+            {letter: 'I'},
+            {letter: 'O'},
+            {letter: 'P'},
+        ],
+        letters2Row: [
+            {letter: 'A'},
+            {letter: 'S'},
+            {letter: 'D'},
+            {letter: 'F'},
+            {letter: 'G'},
+            {letter: 'H'},
+            {letter: 'J'},
+            {letter: 'K'},
+            {letter: 'L'},
+        ],
+        letters3Row: [
+            {letter: 'Z'},
+            {letter: 'X'},
+            {letter: 'C'},
+            {letter: 'V'},
+            {letter: 'B'},
+            {letter: 'N'},
+            {letter: 'M'},
+        ]
     }
     handleWordlePagePress = () => this.setState(state => ({
         homeMenuPage: 'none',
@@ -48,6 +85,21 @@ export default class App extends Component {
     };
     _handleTextChange = guesses => {
         this.setState({ guesses });
+    };
+    gameStart = () =>  {
+        this.handleWordlePagePress()
+        for(let i = this.state.gusses; i >= 0; i--)
+        {
+            this.state.guessArray.splice(this.state.guessArray.length, 0, 
+                ['', '' , '', '', '']
+            )
+        }
+    };
+    addLetter = (letter) => {
+        if(letter == 'A')
+        {
+            
+        }
     };
     
     changeWordLength = (value) => {
@@ -75,7 +127,7 @@ export default class App extends Component {
                 selectedL5: '#deebcc',
             }))
         }
-    }
+    };
     
      numGameSelect = (value) => {
         if(value == 1){
@@ -114,7 +166,7 @@ export default class App extends Component {
                 selectedG4: '#deebcc',
             }))
         }
-    }
+    };
     
 
     render() {
@@ -146,7 +198,7 @@ export default class App extends Component {
                         </View>
                         <View style={styles.versionContainer}>
                             <TouchableHighlight style={styles.startAppButton}
-                                 onPress={this.handleWordlePagePress}
+                                 onPress={this.gameStart}
                             >
                                 <Text style={styles.originalWordleAppText}>
                                     START
@@ -181,47 +233,113 @@ export default class App extends Component {
                         </Text>
                         <View style={styles.sectionContainer}>
                             <View style={styles.quadrentContainer}>
-                                <Text style={styles.paragraph}>
-                                
-                                </Text>
-                                <Text style={styles.paragraph}>
-                                
-                                </Text>
-                                <Text style={styles.paragraph}>
-                                
-                                </Text>
-                                <Text style={styles.paragraph}>
-                                
-                                </Text>
-                                <Text style={styles.paragraph}>
-                                
-                                </Text>
-                                
-
-                            </View>
-                            <View style={styles.quadrentContainer}>
-                                
-                            
+                            <ScrollView>
+                                {this.state.guessArray.map((letter) => (
+                                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                        <View style={styles.guessSquares}>
+                                            <Text style={styles.guessSquaresText}>
+                                            
+                                            </Text>
+                                            
+                                        </View>
+                                        <View style={styles.guessSquares}>
+                                            <Text style={styles.guessSquaresText}>
+                                            
+                                            </Text>
+                                            
+                                        </View>
+                                        <View style={styles.guessSquares}>
+                                            <Text style={styles.guessSquaresText}>
+                                            
+                                            </Text>
+                                            
+                                        </View>
+                                        <View style={styles.guessSquares}>
+                                            <Text style={styles.guessSquaresText}>
+                                            
+                                            </Text>
+                                            
+                                        </View>
+                                        <View style={styles.guessSquares}>
+                                            <Text style={styles.guessSquaresText}>
+                                            
+                                            </Text>
+                                            
+                                        </View>
+                                    </View>
+                                ))},
+                            </ScrollView>
                             </View>
                         </View>
-                        <View style={styles.sectionContainer}>
-                            
-                            <View style={styles.quadrentContainer}>
-                                
-                            
+                        <View style={styles.letterContainer}>
+                            <View style={styles.letterRowContainer}>
+                                {this.state.letters1Row.map((letters) => (
+                                    <TouchableHighlight style={styles.letterButtton}
+                                        onPress={() => {
+                                            alert('Alert Message!')
+                                        }}
+                                    >
+                                        <Text style={styles.paragraph}>
+                                            {letters.letter}
+                                        </Text>
+                                    
+                                    </TouchableHighlight>
+                                        
+                                ))}
                             </View>
-                            <View style={styles.quadrentContainer}>
-                                
-                            
+                            <View style={styles.letterRowContainer}>
+                                {this.state.letters2Row.map((letters) => (
+                                    <TouchableHighlight style={styles.letterButtton}
+                                        onPress={() => {
+                                            alert('Alert Message!')
+                                        }}
+                                    >
+                                        <Text style={styles.paragraph}>
+                                            {letters.letter}
+                                        </Text>
+                                    
+                                    </TouchableHighlight>
+                                        
+                                ))}
                             </View>
+                            <View style={styles.letterRowContainer}>
+                                <TouchableHighlight style={styles.otherButtton}
+                                    onPress={() => {
+                                        alert('Alert Message!')
+                                    }}
+                                >
+                                    <Text style={styles.paragraph}>
+                                        enter
+                                    </Text>
+                                
+                                </TouchableHighlight>
+                                {this.state.letters3Row.map((letters) => (
+                                    <TouchableHighlight style={styles.letterButtton}
+                                        onPress={() => {
+                                            alert('Alert Message!')
+                                        }}
+                                    >
+                                        <Text style={styles.paragraph}>
+                                            {letters.letter}
+                                        </Text>
+                                    
+                                    </TouchableHighlight>
+                                    
+                                ))}
+                                <TouchableHighlight style={styles.otherButtton}
+                                    onPress={() => {
+                                        alert('Alert Message!')
+                                    }}
+                                >
+                                    <Text style={styles.paragraph}>
+                                        Back
+                                    </Text>
+                                
+                                </TouchableHighlight>
+                            </View>
+                            
                         </View>
-                        <TextInput
-                            value={this.state.guess}
-                            maxLength={5}
-                            autoCapitalize="characters"
-                            onChangeText={this._handleTextChange}
-                            style={styles.guessBox}
-                        />
+                        
                     </View>
                 </View>
                 <View style={{display: this.state.wordleSettingsPage}}>
@@ -332,6 +450,7 @@ export default class App extends Component {
                         </View>
                         
                     </View>
+                    
                 </View>
                 
             </View>
@@ -371,29 +490,62 @@ const styles = StyleSheet.create({
     sectionContainer: {
         flexDirection: 'row',
         width: deviceWidth,
-        height: deviceHeight*5/7/2,
+        height: deviceHeight*4.5/7,
         borderWidth: 1,
     },
     quadrentContainer: {
         alignItems: 'center',
-        width: deviceWidth/2,
-        height: deviceHeight*5/7/2,
+        width: deviceWidth,
+        height: deviceHeight*4.5/7,
         borderWidth: 1,
-        backgroundColor: 'red',
     },
     guessingRow: {
         height: deviceHeight*5/7/2/5,
         width: deviceWidth/2,
         borderBottomWidth: 1,
     },
-    guessBox: {
-        height: deviceHeight/9,
-        width: deviceWidth*2/3,
+    guessSquares: {
+        height: deviceHeight*4.5/7/7,
+        width: deviceHeight*4.5/7/7,
+        borderWidth: 2,
+        marginTop: 8,
+        marginRight: 8,
+    },
+    guessSquaresText: {
+        fontSize: 4.5/7/7/1.5,
         textAlign: 'center',
-        textPadding: 14,
-        fontSize: deviceHeight/18,
-        letterSpacing: 14,
-        borderBottomWidth: 1,
+    },
+    letterContainer: {
+        height: deviceHeight/5.2,
+        width: deviceWidth/1.1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 8,
+    },
+    letterRowContainer: {
+        flexDirection: 'row',
+        height: deviceHeight/5.2/3,
+        width: deviceWidth/1.1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    letterButtton: {
+        height: deviceHeight/5.2/3,
+        width: deviceWidth/1.5/8,
+        backgroundColor: '#d4d4d4',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+        marginRight: 3,
+    },
+    otherButtton: {
+        height: deviceHeight/5.2/3,
+        width: deviceWidth/1.5/8*1.7,
+        backgroundColor: '#d4d4d4',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+         marginRight: 3,
     },
     startAppButton: {
         height: deviceHeight/4,
@@ -480,4 +632,3 @@ const styles = StyleSheet.create({
     },
     
 });
-
