@@ -314,9 +314,8 @@ export default class App extends Component {
                                 
                                 </TouchableHighlight>
                             </View>
-                            
+                           
                         </View>
-                        
                     </View>
                 </View>
                 <View style={{display: this.state.wordleSettingsPage}}>
@@ -504,7 +503,7 @@ const styles = StyleSheet.create({
         height: deviceHeight,
         width: deviceWidth,
         alignItems: 'center',
-        paddingTop: 30,
+        // paddingTop: 30,
     },
     sectionContainer: {
         flexDirection: 'row',
@@ -609,6 +608,12 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         
     },
+    gameScroll:{
+        height: deviceHeight/1.25,
+        width: deviceWidth-20,
+        
+        
+    },
     rulesText: {
         fontSize: deviceHeight/23,
         fontFamily:'Comic Sans MS',
@@ -618,6 +623,7 @@ const styles = StyleSheet.create({
         fontFamily: 'verdana',
         marginBottom: 9,
         fontWeight: 'bold',
+        justifyContent: 'center',
     },
     menuTitleQ: {
         fontSize: deviceHeight/14,
