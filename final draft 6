@@ -920,6 +920,56 @@ export default class App extends Component {
             }
             
         }
+        else if(this.state.wordLength == 4)
+        {   
+            let newStr = this.state.randomWord.toUpperCase();
+            let arr = newStr.split("");
+            for(let i = 0; i < 4; i++)
+            {
+                guessArray4[this.state.currentRow].color[i] = '#cccccc';
+                
+                if(arr[0] == guessArray4[this.state.currentRow].row[i] || arr[1] == guessArray4[this.state.currentRow].row[i] || arr[2] == guessArray4[this.state.currentRow].row[i] || arr[3] == guessArray4[this.state.currentRow].row[i])
+                {
+                    guessArray4[this.state.currentRow].color[i] = '#feffb8';
+                    this.setState(state => ({
+                    showGuessArray4: guessArray4,        
+                    }))
+                }
+                if(arr[i] == guessArray4[this.state.currentRow].row[i])
+                {
+                    guessArray4[this.state.currentRow].color[i] = '#90d494';
+                    this.setState(state => ({
+                    showGuessArray5: guessArray4,        
+                    }))
+                }
+            }
+            
+        }
+        else if(this.state.wordLength == 3)
+        {   
+            let newStr = this.state.randomWord.toUpperCase();
+            let arr = newStr.split("");
+            for(let i = 0; i < 3; i++)
+            {
+                guessArray5[this.state.currentRow].color[i] = '#cccccc';
+                
+                if(arr[0] == guessArray3[this.state.currentRow].row[i] || arr[1] == guessArray3[this.state.currentRow].row[i] || arr[2] == guessArray3[this.state.currentRow].row[i])
+                {
+                    guessArray3[this.state.currentRow].color[i] = '#feffb8';
+                    this.setState(state => ({
+                    showGuessArray3: guessArray3,        
+                    }))
+                }
+                if(arr[i] == guessArray3[this.state.currentRow].row[i])
+                {
+                    guessArray3[this.state.currentRow].color[i] = '#90d494';
+                    this.setState(state => ({
+                    showGuessArray3: guessArray3,        
+                    }))
+                }
+            }
+            
+        }
     }
     changeWordLength = (value) => {
         if(value == 3){
@@ -1257,7 +1307,7 @@ export default class App extends Component {
                     <View style={styles.wordleContainer}>
                     
                         <Text style={styles.menuTitle}>
-                            Wordle+
+                            {this.state.randomWord}
                         </Text>
                         <View style={styles.sectionContainer}>
                             <View style={styles.quadrentContainer}>
