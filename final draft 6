@@ -781,8 +781,7 @@ export default class App extends Component {
     outcome = (arr) => {
         let newStr = this.state.randomWord.toUpperCase();
         let str = newStr.split("");
-        for(let i = 0; i < arr[this.state.currentRow].row.length; i++)
-            if(str[i] == arr[this.state.currentRow].row[i])
+            if(str == arr[this.state.currentRow].row)
                 {
                     this.setState(state => ({
                         overlay: 'block',
@@ -923,6 +922,7 @@ export default class App extends Component {
             for(let i = 0; i < fourLetterWords.length; i++)
                 if(this.state.currentCol >= 4 && fourLetterWords[i].toUpperCase() == word)
                 {
+                    this.outcome(guessArray4)
                     this.compareWord()
                     this.setState(state => ({
                         currentRow: this.state.currentRow + 1,
@@ -936,6 +936,7 @@ export default class App extends Component {
             for(let i = 0; i < threeLetterWords.length; i++)
                 if(this.state.currentCol >= 3 && threeLetterWords[i].toUpperCase() == word)
                 {
+                    this.outcome(guessArray3)
                     this.compareWord()
                     this.setState(state => ({
                         currentRow: this.state.currentRow + 1,
@@ -1033,7 +1034,7 @@ export default class App extends Component {
             let arr = newStr.split("");
             for(let i = 0; i < 3; i++)
             {
-                guessArray5[this.state.currentRow].color[i] = '#cccccc';
+                guessArray3[this.state.currentRow].color[i] = '#cccccc';
                 
                 if(arr[0] == guessArray3[this.state.currentRow].row[i] || arr[1] == guessArray3[this.state.currentRow].row[i] || arr[2] == guessArray3[this.state.currentRow].row[i])
                 {
