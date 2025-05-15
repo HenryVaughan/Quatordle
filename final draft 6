@@ -1182,7 +1182,7 @@ export default class App extends Component {
                     
                     <View style={{flexDirection: 'row',}}>
                         <Text style={styles.menuTitleP}>
-                            {this.state.randomWord}
+                            Wordle+
                         </Text>
                         <TouchableHighlight style={{height: deviceHeight/30}}
                                 onPress={this.handleWordle5Back}
