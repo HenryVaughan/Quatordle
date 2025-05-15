@@ -1,0 +1,1919 @@
+import React, { Component } from 'react';
+import { AppRegistry, Text, View, StyleSheet, Image, TextInput, ImageBackground, TouchableHighlight, Alert, Dimensions, ScrollView, Modal } from 'react-native';
+import Constants from 'expo-constants';
+
+let deviceHeight = Dimensions.get('window').height;
+let deviceWidth = Dimensions.get('window').width;
+const threeLetterWords = [
+    // A
+    'aah', 'aal', 'aas', 'aba', 'abb', 'abs', 'aby', 'ace', 'ach', 'act', 'add', 'ado', 
+    'ads', 'adz', 'aff', 'aft', 'aga', 'age', 'ago', 'ags', 'aha', 'ahi', 'ahs', 'aia', 
+    'aid', 'ail', 'aim', 'ain', 'air', 'ais', 'ait', 'aji', 'aka', 'ake', 'ala', 'alb', 
+    'ale', 'alf', 'all', 'alp', 'als', 'alt', 'alu', 'ama', 'ame', 'ami', 'amp', 'amu', 
+    'ana', 'and', 'ane', 'ani', 'ann', 'ans', 'ant', 'any', 'ape', 'apo', 'app', 'apt', 
+    'arb', 'arc', 'ard', 'are', 'arf', 'ark', 'arm', 'ars', 'art', 'ary', 'ash', 'ask', 
+    'asp', 'ass', 'ate', 'ats', 'att', 'aua', 'aue', 'auf', 'auk', 'ava', 'ave', 'avo', 
+    'awa', 'awe', 'awk', 'awl', 'awn', 'axe', 'aye', 'ays', 'ayu', 'azo',
+
+    // B
+    'baa', 'bac', 'bad', 'bae', 'bag', 'bah', 'bal', 'bam', 'ban', 'bao', 'bap', 'bar', 
+    'bas', 'bat', 'bay', 'bed', 'bee', 'beg', 'bel', 'ben', 'bes', 'bet', 'bey', 'bez', 
+    'bib', 'bid', 'big', 'bin', 'bio', 'bis', 'bit', 'biz', 'boa', 'bob', 'bod', 'bog', 
+    'boh', 'boi', 'bok', 'bon', 'boo', 'bop', 'bor', 'bos', 'bot', 'bow', 'box', 'boy', 
+    'bra', 'bro', 'brr', 'bru', 'bub', 'bud', 'bug', 'bum', 'bun', 'bur', 'bus', 'but', 
+    'buy', 'bye', 'bys',
+
+    // C
+    'cab', 'cad', 'caf', 'cag', 'cal', 'cam', 'can', 'cap', 'car', 'cat', 'caw', 'cay', 
+    'caz', 'cee', 'cel', 'cep', 'cha', 'che', 'chi', 'cid', 'cig', 'cis', 'cit', 'cly', 
+    'cob', 'cod', 'cog', 'col', 'con', 'coo', 'cop', 'cor', 'cos', 'cot', 'cow', 'cox', 
+    'coy', 'coz', 'cru', 'cry', 'cub', 'cud', 'cue', 'cum', 'cup', 'cur', 'cut', 'cuz', 
+    'cwm',
+
+    // D
+    'dab', 'dad', 'dae', 'dag', 'dah', 'dak', 'dal', 'dam', 'dan', 'dap', 'das', 'daw', 
+    'day', 'deb', 'dee', 'def', 'deg', 'dei', 'del', 'den', 'dep', 'dev', 'dew', 'dex', 
+    'dey', 'dib', 'did', 'die', 'dif', 'dig', 'dim', 'din', 'dip', 'dis', 'dit', 'div', 
+    'dob', 'doc', 'dod', 'doe', 'dof', 'dog', 'doh', 'dol', 'dom', 'don', 'doo', 'dop', 
+    'dor', 'dos', 'dot', 'dow', 'dox', 'doy', 'dry', 'dso', 'dub', 'dud', 'due', 'dug', 
+    'duh', 'dui', 'dum', 'dun', 'duo', 'dup', 'dux', 'dye', 'dzo',
+
+    // E
+    'ean', 'ear', 'eas', 'eat', 'eau', 'ebb', 'ech', 'eco', 'ecu', 'edh', 'eds', 'eek', 
+    'eel', 'een', 'eew', 'eff', 'efs', 'eft', 'egg', 'ego', 'ehs', 'eik', 'eke', 'eld', 
+    'elf', 'elk', 'ell', 'elm', 'els', 'elt', 'eme', 'emo', 'ems', 'emu', 'end', 'ene', 
+    'eng', 'ens', 'eon', 'era', 'ere', 'erf', 'erg', 'erk', 'erm', 'ern', 'err', 'ers', 
+    'ess', 'est', 'eta', 'eth', 'euk', 'eve', 'evo', 'ewe', 'ewk', 'ewt', 'exo', 'eye',
+
+    // F
+    'fab', 'fad', 'fae', 'fag', 'fah', 'fan', 'fap', 'far', 'fas', 'fat', 'faw', 'fax', 
+    'fay', 'fed', 'fee', 'feg', 'feh', 'fem', 'fen', 'fer', 'fes', 'fet', 'feu', 'few', 
+    'fey', 'fez', 'fib', 'fid', 'fie', 'fig', 'fil', 'fin', 'fir', 'fit', 'fix', 'fiz', 
+    'flu', 'fly', 'fob', 'foe', 'fog', 'foh', 'fon', 'foo', 'fop', 'for', 'fou', 'fox', 
+    'foy', 'fra', 'fro', 'fry', 'fub', 'fud', 'fug', 'fum', 'fun', 'fur',
+
+    // G
+    'gab', 'gad', 'gae', 'gag', 'gak', 'gal', 'gam', 'gan', 'gap', 'gar', 'gas', 'gat', 
+    'gau', 'gaw', 'gay', 'ged', 'gee', 'gel', 'gem', 'gen', 'geo', 'ger', 'get', 'gey',     // Continuing from G...
+    'ghi', 'gib', 'gid', 'gie', 'gif', 'gig', 'gin', 'gio', 'gip', 'gis', 'git', 'gnu',
+    'goa', 'gob', 'god', 'goe', 'gon', 'goo', 'gor', 'gos', 'got', 'gov', 'gox', 'grr',
+    'gub', 'gue', 'gul', 'gum', 'gun', 'gup', 'gur', 'gus', 'gut', 'guv', 'guy', 'gym', 
+    'gyp',
+
+    // H
+    'had', 'hae', 'hag', 'hah', 'haj', 'ham', 'han', 'hao', 'hap', 'has', 'hat', 'haw',
+    'hay', 'heh', 'hem', 'hen', 'hep', 'her', 'hes', 'het', 'hew', 'hex', 'hey', 'hic',
+    'hid', 'hie', 'him', 'hin', 'hip', 'his', 'hit', 'hmm', 'hoa', 'hob', 'hoc', 'hod',
+    'hoe', 'hog', 'hoh', 'hoi', 'hom', 'hon', 'hoo', 'hop', 'hos', 'hot', 'how', 'hox',
+    'hoy', 'hub', 'hue', 'hug', 'huh', 'hui', 'hum', 'hun', 'hup', 'hut', 'hye', 'hyp',
+
+    // I
+    'ice', 'ich', 'ick', 'icy', 'ide', 'ids', 'iff', 'ifs', 'igg', 'ilk', 'ill', 'imp',
+    'ing', 'ink', 'inn', 'ins', 'ion', 'ios', 'ire', 'irk', 'ish', 'ism', 'iso', 'ita',
+    'its', 'ivy', 'iwi',
+
+    // J
+    'jab', 'jag', 'jai', 'jak', 'jam', 'jap', 'jar', 'jaw', 'jay', 'jee', 'jet', 'jeu',
+    'jib', 'jig', 'jin', 'jiz', 'job', 'joe', 'jog', 'jol', 'jor', 'jot', 'jow', 'joy',
+    'jud', 'jug', 'jun', 'jus', 'jut',
+
+    // K
+    'kab', 'kae', 'kaf', 'kai', 'kak', 'kam', 'kas', 'kat', 'kaw', 'kay', 'kea', 'keb',
+    'ked', 'kef', 'keg', 'ken', 'kep', 'ket', 'kex', 'key', 'khi', 'kid', 'kif', 'kin',
+    'kip', 'kir', 'kis', 'kit', 'koa', 'kob', 'koi', 'kon', 'kop', 'kor', 'kos', 'kue',
+    'kye', 'kyu',
+
+    // L
+    'lab', 'lac', 'lad', 'lag', 'lah', 'lam', 'lap', 'lar', 'las', 'lat', 'lav', 'law',
+    'lax', 'lay', 'lea', 'led', 'lee', 'leg', 'lei', 'lek', 'lep', 'les', 'let', 'leu',
+    'lev', 'lew', 'lex', 'ley', 'lib', 'lid', 'lie', 'lig', 'lin', 'lip', 'lis', 'lit',
+    'lob', 'log', 'loo', 'lop', 'lor', 'los', 'lot', 'low', 'lox', 'loy', 'lud', 'lug',
+    'lum', 'lun', 'lur', 'luv', 'lux', 'luz', 'lye', 'lym',
+
+    // M
+    'maa', 'mac', 'mad', 'mae', 'mag', 'mak', 'mal', 'mam', 'man', 'map', 'mar', 'mas',
+    'mat', 'maw', 'max', 'may', 'med', 'mee', 'meg', 'meh', 'mel', 'mem', 'men', 'mes',
+    'met', 'meu', 'mew', 'mho', 'mib', 'mic', 'mid', 'mig', 'mil', 'mim', 'mir', 'mis',
+    'mix', 'miz', 'mmm', 'mna', 'moa', 'mob', 'moc', 'mod', 'moe', 'mog', 'moi', 'mol',
+    'mom', 'mon', 'moo', 'mop', 'mor', 'mos', 'mot', 'mou', 'mow', 'moy', 'moz', 'mud',
+    'mug', 'mum', 'mun', 'mus', 'mut', 'mux', 'myc',
+
+    // N
+    'nab', 'nae', 'nag', 'nah', 'nam', 'nan', 'nap', 'nas', 'nat', 'nav', 'naw', 'nay',
+    'neb', 'ned', 'nee', 'nef', 'neg', 'net', 'new', 'nib', 'nid', 'nie', 'nil', 'nim',
+    'nip', 'nit', 'nix', 'nob', 'nod', 'nog', 'noh', 'nom', 'noo', 'nor', 'nos', 'not',
+    'now', 'nox', 'noy', 'nth', 'nub', 'nun', 'nus', 'nut',
+
+    // O
+    'oaf', 'oak', 'oar', 'oat', 'oba', 'obe', 'obi', 'oca', 'oda', 'odd', 'ode', 'ods',
+    'oes', 'off', 'oft', 'ohm', 'oho', 'ohs', 'oil', 'oka', 'oke', 'old', 'ole', 'oms',
+    'one', 'ono', 'ons', 'ooh', 'oot', 'ope', 'ops', 'opt', 'ora', 'orb', 'orc', 'ore',
+    'ors', 'ort', 'ose', 'oud', 'our', 'out', 'ova', 'owe', 'owl', 'own', 'oxo', 'oxy',
+
+    // P
+    'pac', 'pad', 'pah', 'pal', 'pam', 'pan', 'pap', 'par', 'pas', 'pat', 'paw', 'pax',
+    'pay', 'pea', 'pec', 'ped', 'pee', 'peg', 'peh', 'pen', 'pep', 'per', 'pes', 'pet', 
+    'pew', 'phi', 'pht', 'pia', 'pic', 'pie',
+    'pig', 'pin', 'pip', 'pis', 'pit', 'piu', 'pix', 'ply', 'pod', 'poh', 'poi', 'pol',
+    'pom', 'poo', 'pop', 'pot', 'pow', 'pox', 'pro', 'pry', 'psi', 'pst', 'pub', 'pud',
+    'pug', 'pul', 'pun', 'pup', 'pur', 'pus', 'put', 'puy', 'pya', 'pye', 'pyx',
+
+    // Q
+    'qat', 'qis', 'qua', 'qin',
+
+    // R
+    'rab', 'rad', 'rag', 'rah', 'rai', 'raj', 'ram', 'ran', 'rap', 'ras', 'rat', 'raw',
+    'rax', 'ray', 'reb', 'rec', 'red', 'ree', 'ref', 'reg', 'reh', 'rei', 'rem', 'ren',
+    'rep', 'res', 'ret', 'rev', 'rex', 'rho', 'ria', 'rib', 'rid', 'rif', 'rig', 'rim',
+    'rin', 'rip', 'rit', 'rob', 'roc', 'rod', 'roe', 'rok', 'rom', 'roo', 'rot', 'row',
+    'rub', 'rue', 'rug', 'rum', 'run', 'rut', 'rya', 'rye',
+
+    // S
+    'sab', 'sac', 'sad', 'sae', 'sag', 'sai', 'sal', 'sam', 'san', 'sap', 'sar', 'sat',
+    'sau', 'saw', 'sax', 'say', 'saz', 'sea', 'sec', 'sed', 'see', 'seg', 'sei', 'sel',
+    'sen', 'ser', 'set', 'sew', 'sex', 'sey', 'sha', 'she', 'shh', 'shy', 'sib', 'sic',
+    'sid', 'sie', 'sif', 'sih', 'sim', 'sin', 'sip', 'sir', 'sis', 'sit', 'six', 'ski',
+    'sky', 'sly', 'sob', 'soc', 'sod', 'sog', 'sol', 'som', 'son', 'sop', 'sos', 'sot',
+    'sou', 'sow', 'sox', 'soy', 'spa', 'spy', 'sri', 'sty', 'sub', 'sud', 'sue', 'sum',
+    'sun', 'sup', 'suq', 'sur', 'sus', 'swy', 'sye', 'syn',
+
+    // T
+    'tab', 'tad', 'tae', 'tag', 'tah', 'taj', 'tak', 'tam', 'tan', 'tao', 'tap', 'tar',
+    'tas', 'tat', 'tau', 'tav', 'taw', 'tax', 'tea', 'tec', 'ted', 'tee', 'tef', 'teg',
+    'tel', 'ten', 'tes', 'tet', 'tew', 'tex', 'the', 'tho', 'thy', 'tic', 'tid', 'tie',
+    'tig', 'til', 'tin', 'tip', 'tis', 'tit', 'tix', 'toc', 'tod', 'toe', 'tog', 'tom',
+    'ton', 'too', 'top', 'tor', 'tot', 'tow', 'toy', 'try', 'tsk', 'tub', 'tug', 'tui',
+    'tum', 'tun', 'tup', 'tut', 'tux', 'twa', 'two', 'tye',
+
+    // U
+    'udo', 'uds', 'uey', 'ufo', 'ugh', 'ugs', 'uke', 'ulu', 'ums', 'uni', 'uns', 'upo',
+    'ups', 'urb', 'urd', 'urn', 'urp', 'use', 'uta', 'ute', 'uts', 'utu',
+
+    // V
+    'vac', 'van', 'var', 'vas', 'vat', 'vau', 'vav', 'vaw', 'vee', 'veg', 'vet', 'vex',
+    'via', 'vic', 'vid', 'vie', 'vig', 'vim', 'vin', 'vis', 'voe', 'vol', 'vor', 'vow', 'vox',
+    'vug', 'vum',
+
+    // W
+    'wab', 'wad', 'wae', 'wag', 'wai', 'wan', 'wap', 'war', 'was', 'wat', 'waw', 'wax',
+    'way', 'web', 'wed', 'wee', 'weg', 'wei', 'wen', 'wet', 'wex', 'wey', 'wha', 'who',
+    'why', 'wig', 'win', 'wis', 'wit', 'wiz', 'woe', 'wog', 'wok', 'won', 'woo', 'wop',
+    'wos', 'wot', 'wow', 'wox', 'wry', 'wud', 'wuz', 'wyc', 'wye', 'wyn',
+
+    // X
+    'xis', 'xu',
+
+    // Y
+    'yag', 'yah', 'yak', 'yam', 'yap', 'yar', 'yaw', 'yay', 'yea', 'yeh', 'yen', 'yep',
+    'yes', 'yet', 'yew', 'yex', 'yid', 'yin', 'yip', 'yob', 'yod', 'yok', 'yom', 'yon',
+    'you', 'yow', 'yuk', 'yum', 'yup', 'yus',
+
+    // Z
+    'zag', 'zap', 'zas', 'zax', 'zea', 'zee', 'zek', 'zel', 'zep', 'zex', 'zho', 'zig',
+    'zin', 'zip', 'zit', 'zoa', 'zoo', 'zos', 'zuz', 'zzz']
+const fourLetterWords = [
+    // A
+    'aahs', 'aals', 'abac', 'abas', 'abba', 'abbe', 'abbs', 'abed', 'abet', 'abid', 
+    'able', 'ably', 'abos', 'abri', 'abut', 'abye', 'abys', 'acai', 'acca', 'aced', 
+    'acer', 'aces', 'ache', 'achy', 'acid', 'acme', 'acne', 'acre', 'acta', 'acts', 
+    'acyl', 'adaw', 'adds', 'addy', 'adit', 'ados', 'adry', 'adze', 'aeon', 'aero', 
+    'aery', 'aesc', 'afar', 'affy', 'afro', 'agar', 'agas', 'aged', 'agee', 'ager', 
+    'ages', 'agha', 'agin', 'agio', 'aglu', 'agly', 'agma', 'agog', 'agon', 'ague', 
+    'ahed', 'ahem', 'ahis', 'ahoy', 'aide', 'aids', 'ails', 'aims', 'ains', 'airn', 
+    'airs', 'airt', 'airy', 'aits', 'aitu', 'ajar', 'ajee', 'akee', 'akes', 'akin',
+    'alae', 'alan', 'alar', 'alas', 'alba', 'albs', 'alec', 'alee', 'alef', 'ales', 
+    'alfa', 'alga', 'alif', 'alit', 'alky', 'alls', 'ally', 'alma', 'alme', 'alms', 
+    'aloe', 'alow', 'alps', 'also', 'alto', 'alts', 'alum', 'amah', 'amas', 'ambo', 
+    'amen', 'amia', 'amid', 'amie', 'amin', 'amir', 'amis', 'ammo', 'amok', 'amps', 
+    'amus', 'amyl', 'anal', 'anan', 'anas', 'ance', 'ands', 'anes', 'anew', 'anga', 
+    'anil', 'anis', 'ankh', 'anna', 'anno', 'anns', 'anoa', 'anon', 'ansa', 'anta', 
+    'ante', 'anti', 'ants', 'anus', 'aped', 'aper', 'apes', 'apex', 'apod', 'apos', 
+    'apps', 'apse', 'aqua', 'arak', 'arbs', 'arch', 'arco', 'arcs', 'area', 'ares', 
+    'arfs', 'aria', 'arid', 'aril', 'arks', 'arms', 'army', 'arse', 'arts', 'arty', 
+    'arum', 'arvo', 'aryl', 'asci', 'asea', 'ashy', 'asks', 'asps', 'atap', 'ates', 
+    'atma', 'atom', 'atop', 'auks', 'auld', 'aunt', 'aura', 'auto', 'aver', 'aves', 
+    'avid', 'avos', 'avow', 'away', 'awed', 'awee', 'awes', 'awls', 'awns', 'awny', 
+    'awol', 'awry', 'axal', 'axed', 'axel', 'axes', 'axil', 'axis', 'axle', 'axon', 
+    'ayah', 'ayes', 'ayin', 'azan',
+
+    // B
+    'baal', 'baas', 'baba', 'babe', 'babu', 'baby', 'bach', 'back', 'bacs', 'bade', 
+    'bads', 'baff', 'bags', 'baht', 'bail', 'bait', 'bake', 'bald', 'bale', 'balk', 
+    'ball', 'balm', 'bals', 'bams', 'band', 'bane', 'bang', 'bani', 'bank', 'bans', 
+    'baps', 'barb', 'bard', 'bare', 'barf', 'bark', 'barm', 'barn', 'bars', 'base', 
+    'bash', 'bask', 'bass', 'bast', 'bate', 'bath', 'bats', 'batt', 'baud', 'bawd', 
+    'bawl', 'bawn', 'bays', 'bead', 'beak', 'beam', 'bean', 'bear', 'beat', 'beau', 
+    'beck', 'beds', 'bedu', 'beef', 'been', 'beep', 'beer', 'bees', 'beet', 'begs', 
+    'bell', 'bels', 'belt', 'bema', 'bend', 'bene', 'bens', 'bent', 'berg', 'berk', 
+    'berm', 'best', 'beta', 'beth', 'bets', 'bevy', 'beys', 'bias', 'bibb', 'bibs', 
+    'bice', 'bide', 'bids', 'bier', 'biff', 'biga', 'bigg', 'bigs', 'bike', 'bile', 
+    'bilk', 'bill', 'bima', 'bind', 'bine', 'bins', 'bint', 'bird', 'birl', 'biro', 
+    'birr', 'bise', 'bisk', 'bite', 'bits', 'bitt', 'bize', 'blab', 'blad', 'blah', 
+    'blam', 'blat', 'blaw', 'bleb', 'bled', 'blet', 'blew', 'blin', 'blip', 'blit', 
+    'blob', 'bloc', 'blog', 'blot', 'blow', 'blub', 'blue', 'blur', 'boar', 'boas', 
+    'boat', 'bobs', 'bock', 'bode', 'bods', 'body', 'boff', 'bogs', 'bogy', 'boho', 
+    'boil', 'bola', 'bold', 'bole', 'boll', 'bolo', 'bolt', 'bomb', 'bond', 'bone', 
+    'bong', 'bonk', 'bony', 'book', 'boom', 'boon', 'boor', 'boos', 'boot', 'bops', 
+    'bora', 'bore', 'born', 'bort', 'bosh', 'bosk', 'boss', 'both', 'bots', 'bott', 
+    'bout', 'bowl', 'bows', 'boxy', 'boys', 'bozo', 'brad', 'brae', 'brag', 'bran', 
+    'bras', 'brat', 'braw', 'bray', 'bred', 'bree', 'bren', 'brew', 'brie', 'brig', 
+    'brim', 
+    'brin', 'brio', 'bris', 'brit', 'broo', 'bros', 'brow', 'brrr', 'brut', 'brux', 
+    'buck', 'buds', 'buff', 'bugs', 'buhl', 'buhr', 'bulk', 'bull', 'bump', 'bums', 
+    'bund', 'bung', 'bunk', 'bunn', 'buns', 'bunt', 'buoy', 'bura', 'burg', 'burl', 
+    'burn', 'burp', 'burr', 'burs', 'bury', 'bush', 'busk', 'buss', 'bust', 'busy', 
+    'bute', 'buts', 'butt', 'buys', 'buzz', 'byes', 'byre',
+
+    // C
+    'cabs', 'cade', 'cadi', 'cads', 'cafe', 'cage', 'cagy', 'caid', 'cain', 'cake', 
+    'caky', 'calf', 'calk', 'call', 'calm', 'calo', 'calx', 'came', 'camp', 'cams', 
+    'cane', 'cans', 'cant', 'cape', 'capo', 'caps', 'carb', 'card', 'care', 'cark', 
+    'carl', 'carn', 'carp', 'carr', 'cars', 'cart', 'casa', 'case', 'cash', 'cask', 
+    'cast', 'cate', 'cats', 'caul', 'cave', 'cavy', 'caws', 'cays', 'ceca', 'cede', 
+    'cedi', 'cees', 'ceil', 'cell', 'cels', 'celt', 'cent', 'cepe', 'ceps', 'cere', 
+    'cero', 'cess', 'cete', 'chad', 'chai', 'cham', 'chap', 'char', 'chat', 'chaw', 
+    'chay', 'chef', 'chew', 'chez', 'chia', 'chic', 'chid', 'chin', 'chip', 'chis', 
+    'chit', 'chon', 'chop', 'chou', 'chow', 'chub', 'chuck', 'chufa', 'chug', 'chum', 
+    'ciao', 'cide', 'cids', 'ciel', 'cite', 'city', 'clad', 'clag', 'clam', 'clan', 
+    'clap', 'claw', 'clay', 'clef', 'clew', 'clip', 'clit', 'clod', 'clog', 'clon', 
+    'clop', 'clot', 'cloy', 'club', 'clue', 'coal', 'coat', 'coax', 'cobb', 'cobs', 
+    'coca', 'cock', 'coco', 'coda', 'code', 'cods', 'coed', 'coff', 'coft', 'cogs', 
+    'coho', 'coif', 'coil', 'coin', 'coir', 'coke', 'coky', 'cola', 'cold', 'cole', 
+    'cols', 'colt', 'coma', 'comb', 'come', 'comp', 'cone', 'coni', 'conk', 'conn', 
+    'cons', 'cony', 'cook', 'cool', 'coom', 'coon', 'coop', 'coos', 'coot', 'cope', 
+    'cops', 'copy', 'cord', 'core', 'corf', 'cork', 'corm', 'corn', 'cors', 'cory', 
+    'cosh', 'coss', 'cost', 'cosy', 'cote', 'coth', 'cots', 'cott', 'coup', 'cove', 
+    'cowl', 'cows', 'cowy', 'coxa', 'coys', 'cozy', 'crab', 'crag', 'cram', 'cran', 
+    'crap', 'craw', 'cray', 'cred', 'crew', 'crib', 'cris', 'crit', 'croc', 'crop', 
+    'crow', 'crud', 'crus', 'crux', 'cube', 'cubs', 'cuds', 'cued', 'cues', 'cuff', 
+    'cuif', 'cuke', 'cull', 'culm', 'cult', 'cups', 'curb', 'curd', 'cure', 'curl', 
+    'curn', 'curr', 'curs', 'curt', 'cusk', 'cusp', 'cuss', 'cute', 'cuts', 'cwms', 
+    'cyan', 'cyma', 'cyme', 'cyst', 'czar',
+
+    // D
+    'dabs', 'dace', 'dada', 'dado', 'dads', 'daff', 'daft', 'dago', 'dags', 'dahl', 
+    'dais', 'daks', 'dale', 'dals', 'dame', 'damn', 'damp', 'dams', 'dang', 'dank', 
+    'dans', 'daps', 'darb', 'dare', 'dark', 'darn', 'dart', 'dash', 'data', 'date', 
+    'dato', 'daub', 'daut', 'davy', 'dawk', 'dawn', 'daws', 'dawt', 'days', 'daze', 
+    'dead', 'deaf', 'deal', 'dean', 'dear', 'debs', 'debt', 'deck', 'deco', 'deed', 
+    'deem', 'deep', 'deer', 'dees', 'deet', 'defi', 'deft', 'defy', 'deil', 'deke', 
+    'dele', 'delf', 'deli', 'dell', 'dels', 'delt', 'deme', 'demo', 'demy', 'dene', 
+    'dens', 'dent', 'deny', 'dere', 'derm', 'desk', 'deus', 'deve', 'devi', 'dews', 
+    'dewy', 'dexy', 'deys', 'dhak', 'dhal', 'dhow', 'dial', 'dibs', 'dice', 'dick', 
+    'dido', 'didy', 'died', 'diel', 'dies', 'diet', 'diff', 'difs', 'digs', 'dike', 
+    'dill', 'dils', 'dime', 'dims', 'dine', 'ding', 'dink', 'dins', 'dint', 'diol', 
+    'dips', 'dipt', 'dire', 'dirk', 'dirl', 'dirt', 'disc', 'dish', 'disk', 'diss', 
+    'dita', 'dite', 'dits', 'ditz', 'diva', 'dive', 'djin', 'dock', 'docs', 'dodo', 
+    'doer', 'does', 'doff', 
+    'dogs', 'dogy', 'doit', 'dole', 'doll', 'dols', 'dome', 'doms', 'done', 'dong', 
+    'dons', 'doom', 'door', 'dope', 'dops', 'dopy', 'dore', 'dork', 'dorm', 'dorp', 
+    'dorr', 'dors', 'dort', 'dory', 'dose', 'doss', 'dost', 'dote', 'doth', 'dots', 
+    'doty', 'doum', 'dour', 'doux', 'dove', 'down', 'dows', 'doxy', 'doze', 'dozy', 
+    'drab', 'drag', 'dram', 'drap', 'draw', 'dray', 'dree', 'dreg', 'drek', 'drew', 
+    'drib', 'drip', 'drop', 'drub', 'drug', 'drum', 'drys', 'duad', 'dual', 'dubs', 
+    'duce', 'duck', 'duct', 'dude', 'duds', 'duel', 'dues', 'duet', 'duff', 'dugs', 
+    'duit', 'duke', 'dull', 'duly', 'duma', 'dumb', 'dump', 'dune', 'dung', 'dunk', 
+    'duns', 'dunt', 'duos', 'dupe', 'dups', 'dura', 'dure', 'durn', 'duro', 'durr', 
+    'dusk', 'dust', 'duty', 'dyad', 'dyed', 'dyer', 'dyes', 'dyke', 'dyne', 'dzho',
+
+    // E
+    'each', 'earl', 'earn', 'ears', 'ease', 'east', 'easy', 'eath', 'eats', 'eaux', 
+    'eave', 'ebbs', 'ebon', 'echo', 'ecru', 'ecus', 'eddo', 'eddy', 'edge', 'edgy', 
+    'edhs', 'edit', 'eels', 'eely', 'eery', 'effs', 'efts', 'egad', 'eggs', 'eggy', 
+    'egis', 'egos', 'eide', 'eked', 'ekes', 'elan', 'elds', 'elhi', 'elks', 'ells', 
+    'elms', 'elmy', 'else', 'emes', 'emeu', 'emic', 'emir', 'emit', 'emma', 'emmy', 
+    'emos', 'emyd', 'ends', 'engs', 'enol', 'enow', 'enuf', 'envy', 'eons', 'epee', 
+    'epha', 'epic', 'epos', 'eras', 'ergo', 'ergs', 'erne', 'erns', 'eros', 'errs', 
+    'erst', 'eses', 'esne', 'espy', 'etch', 'eths', 'etic', 'etna', 'etui', 'euro', 
+    'even', 'ever', 'eves', 'evil', 'ewer', 'ewes', 'exam', 'exec', 'exes', 'exit', 
+    'exon', 'expo', 'eyed', 'eyes', 'eyne', 'eyra', 'eyre',
+
+    // F
+    'fabs', 'face', 'fact', 'fade', 'fado', 'fads', 'fags', 'fail', 'fain', 'fair', 
+    'fake', 'fall', 'falx', 'fame', 'fane', 'fang', 'fano', 'fans', 'fard', 'fare', 
+    'farl', 'farm', 'faro', 'fart', 'fase', 'fash', 'fast', 'fate', 'fats', 'faun', 
+    'faux', 'fava', 'fave', 'fawn', 'fays', 'faze', 'fear', 'feat', 'feck', 'feds', 
+    'feed', 'feel', 'fees', 'feet', 'fehs', 'fell', 'felt', 'feme', 'fems', 'fend', 
+    'fens', 'fent', 'feod', 'fere', 'fern', 'fess', 'fest', 'feta', 'fete', 'fets', 
+    'feud', 'feus', 'fiar', 'fiat', 'fibs', 'fice', 'fico', 'fido', 'fids', 'fief', 
+    'fife', 'figs', 'file', 'fill', 'film', 'filo', 'fils', 'find', 'fine', 'fink', 
+    'fino', 'fins', 'fire', 'firm', 'firn', 'firs', 'fish', 'fist', 'fits', 'five', 
+    'fixt', 'fizz', 'flab', 'flag', 'flak', 'flam', 'flan', 'flap', 'flat', 'flaw', 
+    'flax', 'flay', 'flea', 'fled', 'flee', 'flew', 'flex', 'fley', 'flic', 'flip', 
+    'flir', 'flit', 'floc', 'floe', 'flog', 'flop', 'flow', 'flub', 'flue', 'flus', 
+    'flux', 'foal', 'foam', 'fobs', 'foci', 'foes', 'fogs', 'fogy', 'fohs', 'foid', 
+    'foil', 'fold', 'folk', 'fond', 'fone', 'fons', 'font', 'food', 'fool', 'foot', 
+    'fops', 'fora', 'forb', 'ford', 'fore', 'fork', 'form', 'fort', 'foss', 'foul', 
+    'four', 'fowl', 'foxy', 'foys', 'fozy', 'frag', 'frap', 'frat', 'fray', 'free', 
+    'fret', 'frig', 'frit', 'friz', 'frog', 'from', 'frow', 'frug', 'fubs', 'fuci', 
+    'fuck', 'fuds', 'fuel', 'fugs', 'fugu', 'fuji', 'full', 'fume', 'fums', 'fund', 
+    'funk', 'funs', 'furl', 'furs', 'fury', 'fuse', 'fuss', 'fust', 'futz', 'fuze', 
+    'fuzz',
+
+    // G
+    'gabs', 'gaby', 'gade', 'gadi', 'gads', 'gaed', 'gaen', 'gaes', 'gaff', 'gaga', 
+    'gage', 'gags', 'gain', 'gait', 'gala', 'gale', 'gall', 'gals', 'game', 'gamp', 
+    'gams', 'gamy', 'gang',
+    'gans', 'gant', 'gaol', 'gape', 'gaps', 'gapy', 'garb', 'gare', 'gars', 'gash',
+    'gasp', 'gate', 'gath', 'gats', 'gaud', 'gaum', 'gaun', 'gaup', 'gaur', 'gave',
+    'gawk', 'gawp', 'gays', 'gaze', 'gear', 'geck', 'geds', 'geed', 'geek', 'gees',
+    'geez', 'geld', 'gels', 'gelt', 'gems', 'gene', 'gens', 'gent', 'genu', 'germ',
+    'gest', 'geta', 'gets', 'geum', 'ghat', 'ghee', 'ghis', 'gibe', 'gibs', 'gids',
+    'gied', 'gien', 'gies', 'gift', 'giga', 'gigs', 'gild', 'gill', 'gilt', 'gimp',
+    'gink', 'gins', 'gips', 'gird', 'girl', 'girn', 'giro', 'girt', 'gist', 'gite',
+    'gits', 'give', 'glad', 'glam', 'gled', 'glee', 'gleg', 'glen', 'gley', 'glia',
+    'glib', 'glim', 'glob', 'glom', 'glop', 'glow', 'glue', 'glug', 'glum', 'glut',
+    'gnar', 'gnat', 'gnaw', 'gnus', 'goad', 'goal', 'goat', 'gobs', 'goby', 'gods',
+    'goes', 'gogo', 'gold', 'golf', 'gone', 'gong', 'good', 'goof', 'goon', 'goop',
+    'gore', 'gorm', 'gorp', 'gory', 'gosh', 'goth', 'gout', 'gowd', 'gowk', 'gown',
+    'goys', 'grab', 'grad', 'gram', 'gran', 'grat', 'gray', 'gree', 'grew', 'grey',
+    'grid', 'grig', 'grim', 'grin', 'grip', 'grit', 'grog', 'grok', 'grot', 'grow',
+    'grub', 'grue', 'grum', 'guan', 'guar', 'guck', 'gude', 'guff', 'guid', 'gulf',
+    'gull', 'gulp', 'guls', 'gums', 'gunk', 'guns', 'guru', 'gush', 'gust', 'guts',
+    'guvs', 'guys', 'gybe', 'gyms', 'gyne', 'gyps', 'gyre', 'gyri', 'gyro',
+
+    // H
+    'hack', 'hade', 'hads', 'haft', 'hags', 'haha', 'hahs', 'haik', 'hail', 'hair',
+    'haji', 'hake', 'hale', 'half', 'hall', 'halm', 'halo', 'halt', 'hame', 'hams',
+    'hand', 'hang', 'hank', 'hant', 'haps', 'hard', 'hare', 'hark', 'harm', 'harp',
+    'hart', 'hash', 'hasp', 'hate', 'hath', 'hats', 'haul', 'haut', 'have', 'hawk',
+    'haws', 'hays', 'haze', 'hazy', 'head', 'heal', 'heap', 'hear', 'heat', 'hebe',
+    'heck', 'heed', 'heel', 'heft', 'hehs', 'heil', 'heir', 'held', 'hell', 'helm',
+    'help', 'heme', 'hemp', 'hems', 'hens', 'herb', 'herd', 'here', 'herl', 'herm',
+    'hern', 'hero', 'hers', 'hest', 'heth', 'hets', 'hewn', 'hews', 'hick', 'hide',
+    'hied', 'hies', 'high', 'hike', 'hila', 'hild', 'hili', 'hill', 'hilt', 'hind',
+    'hint', 'hips', 'hire', 'hisn', 'hiss', 'hist', 'hits', 'hive', 'hoar', 'hoax',
+    'hobo', 'hobs', 'hock', 'hods', 'hoed', 'hoer', 'hoes', 'hogg', 'hogs', 'hoke',
+    'hold', 'hole', 'holk', 'holm', 'holp', 'hols', 'holt', 'holy', 'home', 'homo',
+    'hone', 'hong', 'honk', 'hood', 'hoof', 'hook', 'hoop', 'hoot', 'hope', 'hops',
+    'hora', 'horn', 'hors', 'hose', 'host', 'hots', 'hour', 'hove', 'howf', 'howk',
+    'howl', 'hows', 'hoya', 'hoys', 'hubs', 'huck', 'hued', 'hues', 'huff', 'huge',
+    'hugs', 'huic', 'hula', 'hulk', 'hull', 'hump', 'hums', 'hung', 'hunh', 'hunk',
+    'huns', 'hunt', 'hurl', 'hurt', 'hush', 'husk', 'huts', 'hwan', 'hype', 'hypo',
+    'hyps',
+
+    // I
+    'iamb', 'ibex', 'ibis', 'iced', 'ices', 'ichs', 'icky', 'icon', 'idea', 'idem',
+    'ides', 'idle', 'idly', 'idol', 'idyl', 'iffy', 'iggy', 'igor', 'ikat', 'ikon',
+    'ilea', 'ilex', 'ilia', 'ilks', 'ills', 'illy', 'imam', 'imid', 'immy', 'impi',
+    'imps', 'inby', 'inch', 'info', 'inia', 'inks', 'inky', 'inly', 'inns', 'inro',
+    'into', 'ions', 'iota', 'ipso', 'iran', 'iraq', 'ired', 'ires', 'iris', 'irks',
+    'iron', 'isba', 'isle', 'isms', 'itch', 'item', 'iwis',
+
+    // J
+    'jabs', 'jack', 'jade', 'jags', 'jail', 'jake', 'jamb', 'jams', 'jane', 'jape',
+    'japs', 'jars', 'jato', 'java', 'jaws', 'jays', 'jazz', 'jean', 'jeed', 'jeep',
+    'jeer', 'jees', 'jeez', 'jefe', 'jehu', 'jell', 'jeon', 'jerk', 'jest', 'jets',
+    'jeux', 'jews', 'jiao', 'jibb', 'jibe', 'jibs', 'jiff', 'jigs', 'jill', 'jilt',
+    'jimp', 'jink', 'jinn', 'jins', 'jinx', 'jism', 'jive', 'jobs', 'jock', 'joes',
+    'joey', 'jogs', 'john', 'join', 'joke', 'joky', 'jole', 'jolt', 'josh', 'joss',
+    'jota', 'jots', 'jouk', 'jowl', 'jows', 'joys', 'juba', 'jube', 'judo', 'juga',
+    'jugs', 'juju', 'juke', 'jump', 'junk', 'jupe', 'jura', 'jury', 'just', 'jute',
+    'juts', 'juve',
+
+    // K
+    'kaba', 'kaka', 'kale', 'kame', 'kana', 'kane', 'kaon', 'kapa', 'kaph', 'karn',
+    'kart', 'kata', 'kats', 'kava', 'kayo', 'kays', 'kbar', 'keas', 'keel', 'keen',
+    'keep', 'keet', 'kefs', 'kegs', 'keir', 'kelp', 'kelt', 'kemp', 'keno', 'kens',
+    'kent', 'kepi', 'keps', 'kept', 'kerb', 'kerf', 'kern', 'keto', 'keys', 'khan',
+    'khat', 'khet', 'khis', 'kibe', 'kick', 'kids', 'kief', 'kier', 'kifs', 'kike',
+    'kill', 'kiln', 'kilo', 'kilt', 'kina', 'kind', 'kine', 'king', 'kink', 'kino',
+    'kins', 'kips', 'kirk', 'kirn', 'kirs', 'kiss', 'kist', 'kite', 'kith', 'kits',
+    'kiva', 'kiwi', 'klap', 'klik', 'knap', 'knar', 'knee', 'knew', 'knit', 'knob',
+    'knop', 'knot', 'know', 'knur', 'koan', 'koas', 'kobo', 'kobs', 'koel', 'kohl',
+    'kois', 'koji', 'kola', 'kolo', 'konk', 'kook', 'koph', 'kops', 'kora', 'kore',
+    'kors', 'koss', 'koto', 'kris', 'kudo', 'kudu', 'kues', 'kuru', 'kvas', 'kyak',
+    'kyar', 'kyat', 'kyes', 'kyle', 'kyte',
+
+    // L
+    'labs', 'lace', 'lack', 'lacs', 'lacy', 'lade', 'lads', 'lady', 'lags', 'laic',
+    'laid', 'lain', 'lair', 'lake', 'lakh', 'laky', 'lall', 'lama', 'lamb', 'lame',
+    'lamp', 'lams', 'land', 'lane', 'lang', 'lank', 'laps', 'lard', 'lari', 'lark',
+    'lars', 'lash', 'lass', 'last', 'late', 'lath', 'lats', 'laud', 'lava', 'lave',
+    'lavs', 'lawn', 'laws', 'lays', 'laze', 'lazy', 'lead', 'leaf', 'leak', 'leal',
+    'lean', 'leap', 'lear', 'leas', 'lech', 'lect', 'lees', 'left', 'legs', 'lehr',
+    'leis', 'leks', 'lend', 'lens', 'lent', 'lept', 'less', 'lest', 'lets', 'leud',
+    'leva', 'levy', 'lewd', 'leys', 'liar', 'libs', 'lice', 'lich', 'lick', 'lido',
+    'lids', 'lied', 'lief', 'lien', 'lier', 'lies', 'lieu', 'life', 'lift', 'like',
+    'lilt', 'lily', 'lima', 'limb', 'lime', 'limn', 'limo', 'limp', 'limy', 'line',
+    'ling', 'link', 'linn', 'lino', 'lins', 'lint', 'liny', 'lion', 'lips', 'lira',
+    'lire', 'liri', 'lisp', 'list', 'lite', 'lits', 'live', 'load', 'loaf', 'loam',
+    'loan', 'lobe', 'lobo', 'lobs', 'loch', 'loci', 'lock', 'loco', 'lode', 'loft',
+    'loge', 'logs', 'logy', 'loid', 'loin', 'loll', 'lone', 'long', 'look', 'loom',
+    'loon', 'loop', 'loos', 'loot', 'lope', 'lops', 'lord', 'lore', 'lorn', 'lors',
+    'lose', 'loss', 'lost', 'lota', 'loth', 'lots', 'loud', 'loup', 'lour', 'lout',
+    'love', 'lows', 'luau', 'lube', 'luck', 'lude', 'lues', 'luff', 'luge', 'lugs',
+    'lull', 'lulu', 'lump', 'lums', 'luna', 'lune', 'lung', 'lunk', 'lunt', 'luny',
+    'lure', 'lurk', 'lush', 'lust', 'lute', 'lutz', 'luvs', 'luxe', 'lyes', 'lynx',
+    'lyre', 'lyse',
+
+    // M
+    'maam', 'mabe', 'mace', 'mach', 'made', 'mage', 'magi', 'mags', 'maid', 'mail',
+    'maim', 'main', 'make', 'mako', 'male', 'mall', 'malm', 'malt', 'mama', 'mana',
+    'mane', 'mans', 'many', 'maps', 'marc', 'mare', 'mark', 'marl', 'mars', 'mart',
+    'masa', 'mash', 'mask', 'mass', 'mast', 'mate', 'math', 'mats', 'matt', 'maul',
+    'maut', 'mawn', 'maws', 'maxi', 'maya', 'mayo', 'mays', 'maze', 'mazy', 'mead',
+    'meal', 'mean', 'meat', 'meds', 'meed', 'meek', 'meet', 'mega', 'megs', 'meld',
+    'mell', 'mels', 'melt', 'meme', 'memo', 'mems', 'mend', 'meno', 'menu', 'meow',
+    'mere', 'merk', 'merl', 'mesa', 'mesh', 'mess', 'meta', 'mete', 'meth', 'mewl',
+    'mews', 'meze', 'mhos', 'mibs', 'mica', 'mice', 'mick', 'mics', 'midi', 'mids',
+    'miff', 'mild', 'mile', 'milk', 'mill', 'milo', 'mils', 'milt', 'mime', 'mind',
+    'mine', 'ming', 'mini', 'mink', 'mint', 'minx', 'mips', 'mire', 'miri', 'mirk',
+    'mirs', 'miry', 'mise', 'mist', 'mite', 'mitt', 'mity', 'mixt', 'moan', 'moas',
+    'moat', 'mobs', 'mock', 'mocs', 'mode', 'modi', 'mods', 'mogs', 'moil', 'mojo',
+    'moke', 'mola', 'mold', 'mole', 'moll', 'molt', 'moly', 'mome', 'moms', 'monk',
+    'mono', 'mons', 'mood', 'moon', 'moor', 'moos', 'moot', 'mope', 'mops', 'mopy',
+    'mora', 'more', 'morn', 'mort', 'mosh', 'moss', 'most', 'mote', 'moth', 'mots',
+    'mott', 'moue', 'move', 'mown', 'mows', 'moxa', 'much', 'muck', 'muds', 'muff',
+    'mugs', 'mule', 'mull', 'mump', 'mums', 'mumu', 'muni', 'muns', 'muon', 'mura',
+    'mure', 'murk', 'muse', 'mush', 'musk', 'muss', 'must', 'mute', 'muts', 'mutt',
+    'mycs', 'myna', 'myth',
+
+    // N
+    'naan', 'nabe', 'nabs', 'nada', 'naff', 'nags', 'naif', 'nail', 'name', 'nana',
+    'nans', 'naoi', 'naos', 'nape', 'naps', 'narc', 'nard', 'nark', 'nary', 'nave',
+    'navy', 'nays', 'nazi', 'neal', 'near', 'neat', 'nebs', 'neck', 'need', 'neem',
+    'neep', 'nefs', 'negs', 'neif', 'nema', 'nene', 'neon', 'nerd', 'ness', 'nest',
+    'nets', 'nett', 'neuk', 'neum', 'neve', 'nevi', 'news', 'newt', 'next', 'nibs',
+    'nice', 'nick', 'nide', 'nidi', 'nids', 'nief', 'nigh', 'nill', 'nils', 'nims',
+    'nine', 'nips', 'nisi', 'nite', 'nits', 'nixe', 'nixy', 'nobs', 'nock', 'node',
+    'nodi', 'nods', 'noel', 'noes', 'nogs', 'noir', 'nole', 'noma', 'nome', 'noms',
+    'nona', 'none', 'nook', 'noon', 'nope', 'nori', 'norm', 'nose', 'nosh', 'nosy',
+    'nota', 'note', 'noun', 'nous', 'nova', 'nows', 'nowt', 'nubs', 'nude', 'nuke',
+    'null', 'numb', 'nuns', 'nuts', 'nyas',
+
+    // O
+    'oafs', 'oaks', 'oars', 'oast', 'oath', 'oats', 'obes', 'obey', 'obia', 'obis',
+    'obit', 'oboe', 'obol', 'ocas', 'odds', 'odea', 'odes', 'odic', 'odor', 'odyl',
+    'ofay', 'offs', 'ogam', 'ogee', 'ogle', 'ogre', 'ohia', 'ohms', 'oils', 'oily',
+    'oink', 'okas', 'okay', 'okeh', 'okes', 'okra', 'olds', 'oldy', 'olea', 'oleo',
+    'oles', 'olio', 'olla', 'omen', 'omer', 'omit', 'once', 'ones', 'only', 'onto',
+    'onus', 'onyx', 'oohs', 'oops', 'oots', 'ooze', 'oozy', 'opah', 'opal', 'oped',
+    'open', 'opes', 'opts', 'opus', 'orad', 'oral', 'orbs', 'orby', 'orca', 'orcs',
+    'ores', 'orgy', 'orle', 'orts', 'oryx', 'osar', 'oses', 'osie', 'otic', 'otto',
+    'ouch', 'ouds', 'ouph', 'ours', 'oust', 'outs', 'ouzo', 'oval', 'oven', 'over',
+    'ovum', 'owed', 'owes', 'owls', 'owns', 'owse', 'oxen', 'oxes', 'oxid', 'oxim',
+    'oyer', 'oyes', 'oyez', 'paca', 
+    'pace', 'pack', 'pact', 'pacs', 'pads', 'page', 'paid', 'pail', 'pain',
+    'pair', 'pale', 'pall', 'palm', 'palp', 'pals', 'paly', 'pamp', 'pane', 'pang',
+    'pans', 'pant', 'papa', 'paps', 'para', 'pard', 'pare', 'park', 'pars', 'part',
+    'pass', 'past', 'pate', 'path', 'pats', 'pave', 'pawl', 'pawn', 'paws', 'pays',
+    'peak', 'peal', 'pean', 'pear', 'peas', 'peat', 'pech', 'peck', 'peds', 'peed',
+    'peek', 'peel', 'peen', 'peep', 'peer', 'pees', 'pegs', 'pehs', 'peke', 'pele',
+    'pelt', 'pend', 'pens', 'pent', 'peon', 'pepo', 'peps', 'pere', 'peri', 'perk',
+    'perm', 'perp', 'pert', 'peso', 'pest', 'pets', 'pews', 'pfft', 'pfui', 'phat',
+    'phew', 'phis', 'phiz', 'phon', 'phot', 'phut', 'pial', 'pian', 'pias', 'pica',
+    'pice', 'pick', 'pics', 'pied', 'pier', 'pies', 'pigs', 'pike', 'piki', 'pile',
+    'pili', 'pill', 'pily', 'pima', 'pimp', 'pina', 'pine', 'ping', 'pink', 'pins',
+    'pint', 'piny', 'pion', 'pipe', 'pips', 'pipy', 'pirn', 'pish', 'piso', 'piss',
+    'pita', 'pith', 'pits', 'pity', 'pius', 'plan', 'play', 'plea', 'pleb', 'pled',
+    'plew', 'plex', 'plie', 'plod', 'plop', 'plot', 'plow', 'ploy', 'plug', 'plum',
+    'plus', 'pock', 'poco', 'pods', 'poem', 'poet', 'pogy', 'pois', 'poke', 'poky',
+    'pole', 'poll', 'polo', 'pols', 'poly', 'pome', 'pomo', 'pomp', 'pond', 'pone',
+    'pong', 'pony', 'pood', 'poof', 'pooh', 'pool', 'poon', 'poop', 'poor', 'pope',
+    'pops', 'pore', 'pork', 'porn', 'port', 'pose', 'posh', 'post', 'posy', 'pots',
+    'pouf', 'pour', 'pout', 'pows', 'poxy', 'pram', 'prat', 'pray', 'prep', 'prey',
+    'prez', 'prim', 'proa', 'prob', 'prod', 'prof', 'prog', 'prom', 'prop', 'pros',
+    'prow', 'psis', 'psst', 'ptui', 'pubs', 'puce', 'puck', 'puds', 'puff', 'pugs',
+    'puke', 'pula', 'pule', 'pull', 'pulp', 'puls', 'puma', 'pump', 'puna', 'punk',
+    'puns', 'punt', 'puny', 'pupa', 'pups', 'pure', 'puri', 'purl', 'purr', 'purs',
+    'push', 'puts', 'putt', 'putz', 'pyas', 'pyes', 'pyic', 'pyin', 'pyre', 'pyro',
+
+    // Q
+    'qaid', 'qats', 'qoph', 'quad', 'quag', 'quai', 'quay', 'quey', 'quid', 'quip',
+    'quit', 'quiz',
+
+    // R
+    'rabi', 'race', 'rack', 'racy', 'rads', 'raff', 'raft', 'raga', 'rage', 'ragi',
+    'rags', 'raid', 'rail', 'rain', 'raja', 'rake', 'raki', 'rale', 'rami', 'ramp',
+    'rams', 'rand', 'rang', 'rani', 'rank', 'rant', 'rape', 'raps', 'rapt', 'rare',
+    'rase', 'rash', 'rasp', 'rate', 'rath', 'rats', 'rave', 'raws', 'raya', 'rays',
+    'raze', 'razz', 'read', 'real', 'ream', 'reap', 'rear', 'rebs', 'reck', 'recs',
+    'redd', 'rede', 'reds', 'reed', 'reef', 'reek', 'reel', 'rees', 'refs', 'reft',
+    'regs', 'reif', 'rein', 'reis', 'rely', 'rems', 'rend', 'rent', 'repo', 'repp',
+    'reps', 'resh', 'rest', 'rete', 'rets', 'revs', 'rhea', 'rhos', 'rhus', 'rial',
+    'rias', 'ribs', 'rice', 'rich', 'rick', 'ride', 'rids', 'riel', 'rife', 'riff',
+    'rift', 'rigs', 'rile', 'rill', 'rime', 'rims', 'rimy', 'rind', 'ring', 'rink',
+    'rins', 'riot', 'ripe', 'rips', 'rise', 'risk', 'rite', 'ritz', 'rive', 'road',
+    'roam', 'roan', 'roar', 'robe', 'robs', 'rock', 'rocs', 'rode', 'rods', 'roes',
+    'roil', 'role', 'rolf', 'roll', 'romp', 'roms', 'rood', 'roof', 'rook', 'room',
+    'root', 'rope', 'ropy', 'rose', 'rosy', 'rota', 'rote', 'roti', 'roto', 'rots',
+    'roue', 'roup', 'rout', 'rove', 'rows', 'rube', 'rubs', 'ruby', 'ruck', 'rudd',
+    'rude', 'rued', 'ruer', 'rues', 'ruff', 'ruga', 'rugs', 'ruin', 'rule', 'rump',
+    'rums', 'rune', 'rung', 'runs', 'runt', 'ruse', 'rust', 'ruth', 'ruts', 'ryal',
+    'ryas', 'ryes', 'ryke', 'rynd', 'ryot',
+
+    // S
+    'sabe', 'sabs', 'sack', 'sacs', 'sade', 'safe', 'sago', 'sags', 'sagy', 'said',
+    'sail', 'sain', 'sake', 'saki', 'sale', 'sall', 'salp', 'sals', 'salt', 'same',
+    'samp', 'sand', 'sane', 'sang', 'sank', 'sans', 'saps', 'sard', 'sari', 'sark',
+    'sash', 'sass', 'sate', 'sati', 'saul', 'save', 'sawn', 'saws', 'says', 'scab',
+    'scad', 'scag', 'scam', 'scan', 'scar', 'scat', 'scop', 'scot', 'scow', 'scry',
+    'scud', 'scum', 'scup', 'scut', 'seal', 'seam', 'sear', 'seas', 'seat', 'secs',
+    'sect', 'seed', 'seek', 'seel', 'seem', 'seen', 'seep', 'seer', 'sees', 'sego',
+    'segs', 'seif', 'self', 'sell', 'sels', 'send', 'sene', 'sent', 'sept', 'sera',
+    'sere', 'serf', 'seri', 'seta', 'sets', 'sett', 'sewn', 'sews', 'sext', 'sexy',
+    'shad', 'shag', 'shah', 'sham', 'shat', 'shaw', 'shay', 'shea', 'shed', 'shes',
+    'shew', 'shim', 'shin', 'ship', 'shit', 'shiv', 'shmo', 'shod', 'shoe', 'shog',
+    'shoo', 'shop', 'shot', 'show', 'shri', 'shul', 'shun', 'shut', 'shwa', 'sial',
+    'sibb', 'sibs', 'sice', 'sick', 'sics', 'side', 'sift', 'sigh', 'sign', 'sika',
+    'sike', 'sild', 'silk', 'sill', 'silo', 'silt', 'sima', 'simp', 'sine', 'sing',
+    'sink', 'sins', 'sipe', 'sips', 'sire', 'sirs', 'site', 'sith', 'sits', 'size',
+    'sizy', 'skag', 'skas', 'skat', 'skee', 'skeg', 'skep', 'skew', 'skid', 'skim',
+    'skin', 'skip', 'skis', 'skit', 'slab', 'slag', 'slam', 'slap', 'slat', 'slaw',
+    'slay', 'sled', 'slew', 'slid', 'slim', 'slip', 'slit', 'slob', 'sloe', 'slog',
+    'slop', 'slot', 'slow', 'slub', 'slue', 'slug', 'slum', 'slur', 'slut', 'smew',
+    'smit', 'smog', 'smug', 'smut', 'snag', 'snap', 'snaw', 'sned', 'snib', 'snip',
+    'snit', 'snob', 'snog', 'snot', 'snow', 'snub', 'snug', 'soak', 'soap', 'soar',
+    'sobs', 'sock', 'soda', 'sods', 'sofa', 'soft', 'soil', 'soja', 'soke', 'sola',
+    'sold', 'sole', 'soli', 'solo', 'sols', 'some', 'soms', 'sone', 'song', 'sons',
+    'sook', 'soon', 'soot', 'soph', 'sops', 'sora', 'sorb', 'sord', 'sore', 'sori',
+    'sorn', 'sort', 'soth', 'sots', 'souk', 'soul', 'soup', 'sour', 'sous', 'sown',
+    'sows', 'soya', 'soys', 'spae', 'spam', 'span', 'spar', 'spas', 'spat', 'spay',
+    'spec', 'sped', 'spew', 'spic', 'spik', 'spin', 'spit', 'spiv', 'spot', 'spry',
+    'spud', 'spue', 'spun', 'spur', 'stab', 'stag', 'star', 'stat', 'staw', 'stay',
+    'stem', 'step', 'stet', 'stew', 'stey', 'stir', 'stoa', 'stob', 'stop', 'stot',
+    'stow', 'stub', 'stud', 'stum', 'stun', 'stye', 'suba', 'subs', 'such', 'suck',
+    'sudd', 'suds', 'sued', 'suer', 'sues', 'suet', 'sugh', 'suit', 'sulk', 'sump',
+    'sums', 'sung', 'sunk', 'sunn', 'suns', 'supe', 'sups', 'suqs', 'sure', 'surf',
+    'swab', 'swag', 'swam', 'swan', 'swap', 'swat', 'sway', 'swig', 'swim', 'swob',
+    'swop', 'swot', 'swum', 'sync', 'syne', 'syph',
+
+    // T
+    'tabs', 'tace', 'tach', 'tack', 'taco', 'tact', 'tads', 'tael', 'tags', 'tail',
+    'tain', 'take', 'tala', 'talc', 'tale', 'talk', 'tall', 'tame', 'tamp', 'tams',
+    'tang', 'tank', 'tans', 'taos', 'tape', 'taps', 'tare', 'tarn', 'taro', 'tarp',
+    'tars', 'tart', 'task', 'tass', 'tate', 'tats', 'taut', 'taws', 'taxi', 'teak',
+    'teal', 'team', 'tear', 'teas', 'teat', 'tech', 'teds', 'teed', 'teel', 'teem',
+    'teen', 'tees', 'tell', 'temp', 'tend', 'tens', 'tent', 'term', 'tern', 'test',
+    'teth', 'text', 'thae', 'than', 'that', 'thaw', 'thee', 'them', 'then', 'thew',
+    'they', 'thin', 'thio', 'thir', 'this', 'thou', 'thro', 'thru','thud', 'thug', 'thus', 'tick', 'tics', 'tide', 'tidy', 'tied', 'tier', 'ties',
+    'tiff', 'tike', 'tiki', 'tile', 'till', 'tilt', 'time', 'tine', 'ting', 'tins',
+    'tint', 'tiny', 'tipi', 'tips', 'tire', 'tirl', 'tiro', 'tits', 'toad', 'toby',
+    'tods', 'tody', 'toed', 'toes', 'toff', 'toft', 'tofu', 'toga', 'togs', 'toil',
+    'toke', 'told', 'tole', 'toll', 'tomb', 'tome', 'toms', 'tone', 'tong', 'tons',
+    'tony', 'took', 'tool', 'toom', 'toon', 'toot', 'tope', 'tops', 'tora', 'torc',
+    'tore', 'tori', 'torn', 'toro', 'torr', 'tors', 'tort', 'tory', 'tosh', 'toss',
+    'tost', 'tote', 'tots', 'tour', 'tout', 'town', 'tows', 'toxic', 'toys', 'trad',
+    'tram', 'trap', 'tray', 'tree', 'trek', 'tret', 'trey', 'trig', 'trim', 'trio',
+    'trip', 'trod', 'trog', 'trop', 'trot', 'trow', 'troy', 'true', 'trug', 'tsar',
+    'tuba', 'tube', 'tubs', 'tuck', 'tufa', 'tuff', 'tuft', 'tugs', 'tuis', 'tule',
+    'tump', 'tums', 'tuna', 'tune', 'tung', 'tuns', 'tups', 'turd', 'turf', 'turk',
+    'turn', 'tush', 'tusk', 'tuts', 'tutu', 'twae', 'twain', 'tway', 'twee', 'twig',
+    'twin', 'twit', 'twos', 'tyke', 'type', 'typo', 'tyre', 'tyro',
+
+    // U
+    'udos', 'ughs', 'ugly', 'ukes', 'ulna', 'ultra', 'umbo', 'umps', 'unai', 'unau',
+    'unbe', 'unci', 'unco', 'unde', 'undo', 'undy', 'unit', 'unto', 'upas', 'upby',
+    'updo', 'upon', 'urbs', 'urds', 'urea', 'urge', 'uric', 'urns', 'urps', 'ursa',
+    'used', 'user', 'uses', 'utas', 'utes', 'uvea',
+
+    // V
+    'vacs', 'vade', 'vagi', 'vail', 'vain', 'vale', 'vamp', 'vane', 'vang', 'vans',
+    'vary', 'vase', 'vast', 'vats', 'vatu', 'vaus', 'vavs', 'vaws', 'veal', 'veep',
+    'veer', 'vees', 'veil', 'vein', 'vela', 'veld', 'vena', 'vend', 'vent', 'verb',
+    'vers', 'vert', 'very', 'vest', 'veto', 'vets', 'vext', 'vial', 'vias', 'vibe',
+    'vice', 'vide', 'vids', 'vied', 'vier', 'vies', 'view', 'viga', 'vigs', 'vile',
+    'vill', 'vims', 'vine', 'vino', 'vins', 'viny', 'viol', 'virl', 'visa', 'vise',
+    'vita', 'viva', 'vive', 'voes', 'void', 'vole', 'volt', 'vote', 'vows', 'vrow',
+    'vugg', 'vugh', 'vugs',
+
+    // W
+    'wabs', 'wack', 'wade', 'wadi', 'wads', 'wady', 'waes', 'waff', 'waft', 'wage',
+    'wags', 'waif', 'wail', 'wain', 'wair', 'wait', 'wake', 'wale', 'walk', 'wall',
+    'waly', 'wame', 'wand', 'wane', 'wang', 'wank', 'wans', 'want', 'wany', 'waps',
+    'ward', 'ware', 'wark', 'warm', 'warn', 'warp', 'wars', 'wart', 'wary', 'wash',
+    'wasp', 'wast', 'wats', 'watt', 'wauk', 'waul', 'wave', 'wavy', 'wawl', 'waws',
+    'waxy', 'ways', 'weak', 'weal', 'wean', 'wear', 'webs', 'weds', 'weed', 'week',
+    'weel', 'ween', 'weep', 'weer', 'wees', 'weet', 'weft', 'weir', 'weld', 'well',
+    'welt', 'wend', 'wens', 'went', 'wept', 'were', 'wert', 'west', 'wets', 'wham',
+    'whap', 'what', 'whee', 'when', 'whet', 'whew', 'whey', 'whid', 'whig', 'whim',
+    'whin', 'whip', 'whir', 'whit', 'whiz', 'whoa', 'whom', 'whop', 'whys', 'wich',
+    'wick', 'wide', 'wife', 'wigs', 'wild', 'wile', 'will', 'wilt', 'wily', 'wimp',
+    'wind', 'wine', 'wing', 'wink', 'wino', 'wins', 'wipe', 'wire', 'wiry', 'wise',
+    'wish', 'wisp', 'wist', 'with', 'wits', 'wive', 'woad', 'woes', 'woke', 'woks',
+    'wold', 'wolf', 'womb', 'wonk', 'wons', 'wont', 'wood', 'woof', 'wool', 'woos',
+    'wops', 'word', 'wore', 'work', 'worm', 'worn', 'wort', 'wost', 'wots', 'wove',
+    'wows', 'wrap', 'wren', 'writ', 'wyes', 'wyle',
+
+    // X
+    'xyst',
+
+    // Y
+    'yack', 'yaff', 'yagi', 'yags', 'yahi', 'yaks', 'yald', 'yale', 'yams', 'yang',
+    'yank', 'yaps', 'yard', 'yare','yarm', 'yarn', 'yarp', 'yaws', 'yays', 'yeah', 
+    'yean', 'year', 'yeas', 'yech',
+    'yegg', 'yeld', 'yelk', 'yell', 'yelp', 'yens', 'yeps', 'yerk', 'yeti', 'yett',
+    'yeuk', 'yews', 'yids', 'yill', 'yins', 'yipe', 'yips', 'yird', 'yirr', 'ylem',
+    'yobs', 'yock', 'yode', 'yogi', 'yoke', 'yoks', 'yolk', 'yond', 'yoni', 'yore',
+    'york', 'youp', 'your', 'yous', 'yowe', 'yowl', 'yows', 'yuck', 'yuks', 'yule',
+    'yups', 'yurt',
+
+    // Z
+    'zags', 'zany', 'zaps', 'zarf', 'zeal', 'zebu', 'zeds', 'zees', 'zein', 'zeks',
+    'zeps', 'zerk', 'zero', 'zest', 'zeta', 'zigs', 'zill', 'zinc', 'zine', 'zing',
+    'zins', 'zips', 'ziti', 'zits', 'zoea', 'zoic', 'zona', 'zone', 'zonk', 'zoom',
+    'zoos', 'zori', 'zyme'
+];
+const words = ['aalii', 'aaron', 'abaca', 'abaft', 'abamp', 'abase', 'abash', 'abate', 'abbot', 'abele', 'abets', 'abhor', 'abide', 'abies', 'ables', 'abode', 'abohm', 'abort', 'about', 'above', 'abuse', 'abuts', 'abuzz', 'abyes', 'abysm', 'abyss', 'accra', 'acerb', 'acids', 'ackee', 'acmes', 'acned', 'acnes', 'acold', 'acorn', 'acres', 'acrid', 'actin', 'actor', 'acute', 'acyls', 'adage', 'adams', 'adapa', 'adapt', 'addax', 'adder', 'addle', 'adept', 'adieu', 'adios', 'adits', 'adman', 'admen', 'admit', 'admix', 'adobe', 'adobo', 'adopt', 'adore', 'adorn', 'adult', 'adust', 'adzes', 'aedes', 'aegir', 'aegis', 'aeons', 'aerie', 'aesir', 'aesop', 'affix', 'afire', 'afoot', 'afoul', 'afros', 'after', 'again', 'agama', 'agape', 'agars', 'agate', 'agave', 'agaze', 'agene', 'agent', 'aggro', 'aghan', 'aghas', 'agile', 'aging', 'agios', 'agism', 'aglet', 'aglow', 'agone', 'agons', 'agony', 'agora', 'agree', 'agues', 'ahead', 'ahems', 'ahura', 'aided', 'aides', 'aioli', 'aired', 'airts', 'aisle', 'ajuga', 'akees', 'akron', 'alamo', 'alarm', 'alary', 'alate', 'albee', 'album', 'alces', 'alder', 'aldol', 'aleph', 'alert', 'aleut', 'algae', 'algal', 'algid', 'algin', 'algol', 'alias', 'alibi', 'alien', 'align', 'alike', 'aline', 'alive', 'alkyd', 'alkyl', 'allah', 'allay', 'allen', 'alley', 'allis', 'allot', 'allow', 'alloy', 'allyl', 'alnus', 'aloes', 'aloha', 'alone', 'along', 'aloof', 'alosa', 'aloud', 'alpha', 'altar', 'alter', 'altos', 'alula', 'alums', 'amahs', 'amass', 'amati', 'amaze', 'amber', 'ambit', 'amble', 'ambos', 'ameba', 'ameer', 'amend', 'amens', 'ament', 'amias', 'amide', 'amigo', 'amine', 'amino', 'amirs', 'amish', 'amiss', 'amity', 'amman', 'ammos', 'amnic', 'amoks', 'ample', 'amply', 'ampul', 'amuck', 'amuse', 'amyls', 'anasa', 'andes', 'anele', 'angas', 'angel', 'anger', 'angle', 'angry', 'angst', 'angus', 'anile', 'anils', 'anima', 'anime', 'anion', 'anise', 'anjou', 'ankle', 'ankus', 'annam', 'annas', 'annex', 'annoy', 'annul', 'annum', 'anoas', 'anode', 'anole', 'anomy', 'anova', 'anser', 'antes', 'antic', 'antis', 'antsy', 'antum', 'anura', 'anvil', 'anzac', 'aorta', 'aotus', 'apace', 'apart', 'apers', 'apery', 'aphid', 'aphis', 'apian', 'apios', 'apish', 'apium', 'apnea', 'appal', 'apple', 'apply', 'appro', 'april', 'apron', 'apses', 'apsis', 'aptly', 'aquas', 'arabs', 'arbor', 'arced', 'arcos', 'arcus', 'ardea', 'ardeb', 'ardor', 'areal', 'areas', 'areca', 'arena', 'arere', 'arete', 'argal', 'argil', 'argon', 'argos', 'argot', 'argue', 'argus', 'arhat', 'aries', 'arils', 'arise', 'arius', 'arles', 'armed', 'armet', 'armor', 'aroid', 'aroma', 'arras', 'array', 'arrow', 'arses', 'arson', 'arulo', 'arums', 'aryan', 'asana', 'asarh', 'asbaw', 'ascii', 'ascot', 'ascus', 'asdic', 'ashen', 'ashir', 'ashur', 'asian', 'aside', 'asker', 'askew', 'aspen', 'asper', 'aspic', 'aspis', 'assam', 'assay', 'asset', 'aster', 'astir', 'astor', 'ataxy', 'athar', 'atilt', 'atlas', 'atole', 'atoll', 'atoms', 'atone', 'atony', 'atopy', 'atrip', 'attar', 'attic', 'audad', 'audio', 'audit', 'auger', 'aught', 'augur', 'aunts', 'aunty', 'aural', 'auric', 'autos', 'auxin', 'avahi', 'avail', 'avena', 'avens', 'avers', 'avert', 'avian', 'avoid', 'avows', 'await', 'awake', 'award', 'aware', 'awash', 'aways', 'awful', 'awing', 'awned', 'awols', 'axial', 'axile', 'axils', 'axiom', 'axles', 'axone', 'axons', 'ayahs', 'ayins', 'azide', 'azido', 'azoic', 'azote', 'aztec', 'azure', 'baals', 'babas', 'babel', 'babes', 'babka', 'baboo', 'bacca', 'baccy', 'bacon', 'badge', 'badly', 'bagel', 'baggy', 'bahai', 'bahts', 'bails', 'bairn', 'baits', 'baiza', 'baize', 'baked', 'baker', 'balas', 'balds', 'baldy', 'bales', 'balks', 'balky', 'bally', 'balms', 'balmy', 'balsa', 'banal', 'bands', 'bandy', 'banes', 'banff', 'banjo', 'banks', 'banns', 'bantu', 'barbs', 'barbu', 'barde', 'bards', 'bared', 'bares', 'barfs', 'barge', 'baric', 'barks', 'barky', 'barms', 'barmy', 'barns', 'baron', 'barth', 'barye', 'basal', 'based', 'basic', 'basil', 'basin', 'basis', 'basks', 'basso', 'baste', 'basts', 'batch', 'bated', 'bathe', 'batik', 'batis', 'baton', 'batty', 'bauds', 'baulk', 'bawds', 'bawdy', 'bawls', 'bayou', 'bazar', 'beach', 'beads', 'beady', 'beaks', 'beams', 'beamy', 'beano', 'beans', 'beany', 'beard', 'bears', 'beast', 'beats', 'beaut', 'bebop', 'becks', 'bedew', 'bedim', 'beech', 'beefs', 'beefy', 'beeps', 'beery', 'beets', 'befit', 'befog', 'beget', 'begin', 'begum', 'beige', 'being', 'beira', 'belay', 'belch', 'belie', 'belle', 'bells', 'belly', 'below', 'belts', 'bemas', 'bench', 'bends', 'benet', 'benin', 'benne', 'benni', 'benny', 'bents', 'beret', 'bergs', 'berms', 'berne', 'beroe', 'berry', 'berth', 'beryl', 'beset', 'besom', 'besot', 'bests', 'betas', 'betel', 'beths', 'bevel', 'bezel', 'bhaga', 'bhang', 'bialy', 'bible', 'biddy', 'bides', 'bidet', 'biers', 'biffs', 'bifid', 'bight', 'bigot', 'bijou', 'biker', 'bikes', 'bilby', 'biles', 'bilge', 'bilgy', 'bilks', 'bills', 'billy', 'bimbo', 'binds', 'bines', 'binge', 'bingo', 'biome', 'biont', 'biota', 'biped', 'birch', 'birds', 'birle', 'birls', 'birrs', 'birth', 'bises', 'bison', 'bitch', 'biter', 'bites', 'bitis', 'bitsu', 'bitty', 'bizes', 'bizet', 'blabs', 'black', 'blade', 'blahs', 'blain', 'blair', 'blake', 'blame', 'blanc', 'bland', 'blank', 'blare', 'blase', 'blast', 'blate', 'blats', 'blaze', 'bleak', 'blear', 'bleat', 'blebs', 'bleed', 'bleep', 'blend', 'bless', 'blest', 'blimp', 'blind', 'blini', 'blink', 'bliny', 'blips', 'bliss', 'blitz', 'bloat', 'blobs', 'block', 'blocs', 'bloke', 'blond', 'blood', 'bloom', 'blots', 'blown', 'blows', 'blowy', 'blues', 'bluff', 'blunt', 'blurb', 'blurs', 'blurt', 'blush', 'board', 'boars', 'boast', 'boats', 'bobby', 'bocce', 'bocci', 'boche', 'bocks', 'bodes', 'bodge', 'boers', 'boffo', 'bogey', 'boggy', 'bogie', 'bogus', 'boils', 'boise', 'boles', 'bolls', 'bolos', 'bolti', 'bolts', 'bolus', 'bombs', 'bonce', 'bonds', 'boned', 'boner', 'bones', 'boney', 'bongo', 'bongs', 'bonks', 'bonny', 'bonus', 'boobs', 'booby', 'books', 'booms', 'boone', 'boons', 'boors', 'boost', 'booth', 'booty', 'booze', 'boozy', 'borax', 'bored', 'borer', 'bores', 'boric', 'boron', 'bosch', 'bosks', 'bosky', 'bosom', 'boson', 'bossy', 'bosun', 'botas', 'botch', 'bough', 'boule', 'bound', 'bourn', 'bouse', 'bouts', 'bovid', 'bowed', 'bowel', 'bower', 'bowie', 'bowls', 'bowse', 'boxed', 'boxer', 'boxes', 'bozos', 'brace', 'bract', 'brads', 'braes', 'bragi', 'brags', 'braid', 'brail', 'brain', 'brake', 'braky', 'brand', 'brant', 'brash', 'brass', 'brats', 'brave', 'bravo', 'brawl', 'brawn', 'braws', 'brays', 'braze', 'bread', 'break', 'bream', 'breed', 'brens', 'brent', 'brest', 'breve', 'brews', 'briar', 'bribe', 'brick', 'bride', 'brief', 'brier', 'brigs', 'brill', 'brims', 'brine', 'bring', 'brink', 'briny', 'brios', 'brisk', 'briss', 'brith', 'brits', 'britt', 'broad', 'broil', 'broke', 'brome', 'bronc', 'bronx', 'brood', 'brook', 'broom', 'broth', 'brown', 'brows', 'bruce', 'bruin', 'bruit', 'brule', 'bruno', 'brunt', 'brush', 'brusk', 'brute', 'bryan', 'bryum', 'bubos', 'buddy', 'budge', 'budlo', 'buffs', 'buggy', 'bugle', 'buhls', 'build', 'built', 'bulbs', 'bulge', 'bulgy', 'bulks', 'bulky', 'bulla', 'bulls', 'bully', 'bumfs', 'bumph', 'bumps', 'bumpy', 'bunce', 'bunch', 'bunco', 'bungs', 'bunko', 'bunks', 'bunny', 'bunts', 'buoys', 'buras', 'buret', 'burgh', 'burgs', 'burin', 'burka', 'burke', 'burls', 'burly', 'burma', 'burns', 'burnt', 'burps', 'burro', 'burrs', 'burry', 'bursa', 'burst', 'burys', 'busby', 'bushy', 'busks', 'busts', 'busty', 'butat', 'butch', 'butea', 'buteo', 'butte', 'butts', 'butty', 'butut', 'butyl', 'buxom', 'buxus', 'buyer', 'bylaw', 'byres', 'byron', 'bytes', 'byway', 'caaba', 'cabal', 'cabby', 'caber', 'cabin', 'cable', 'cabot', 'cacao', 'cache', 'caddo', 'caddy', 'cadet', 'cadge', 'cadre', 'cafes', 'cager', 'cages', 'cagey', 'cains', 'cairn', 'cairo', 'cajun', 'cakes', 'calfs', 'calif', 'calks', 'calla', 'calls', 'calms', 'calve', 'calyx', 'camas', 'camel', 'cameo', 'camps', 'campy', 'camus', 'canal', 'candy', 'canes', 'canid', 'canis', 'canna', 'canny', 'canoe', 'canon', 'canto', 'cants', 'canty', 'caper', 'capes', 'capon', 'capos', 'capra', 'capri', 'caput', 'carat', 'cards', 'cares', 'caret', 'carex', 'cargo', 'carib', 'carks', 'carob', 'carol', 'carom', 'carps', 'carry', 'carte', 'carts', 'carum', 'carve', 'carya', 'cased', 'cases', 'casks', 'caste', 'casts', 'catch', 'cater', 'catha', 'catsu', 'catty', 'cauda', 'caulk', 'cauls', 'causa', 'cause', 'caves', 'cavia', 'cavil', 'cavum', 'cease', 'cebus', 'cecal', 'cecum', 'cedar', 'cedes', 'cedis', 'ceiba', 'ceibo', 'cello', 'cells', 'celom', 'celts', 'cense', 'cents', 'ceras', 'ceres', 'ceric', 'ceros', 'cetus', 'chads', 'chafe', 'chaff', 'chaga', 'chain', 'chair', 'chait', 'chaja', 'chalk', 'champ', 'chang', 'chant', 'chaos', 'chara', 'chard', 'charm', 'charr', 'chars', 'chart', 'chary', 'chase', 'chasm', 'chats', 'chaws', 'cheap', 'cheat', 'check', 'cheek', 'cheep', 'cheer', 'chefs', 'chela', 'chert', 'chess', 'chest', 'chevy', 'chews', 'chewy', 'chian', 'chick', 'chico', 'chics', 'chide', 'chief', 'child', 'chile', 'chili', 'chill', 'chime', 'chimp', 'china', 'chine', 'chink', 'chino', 'chins', 'chips', 'chirk', 'chirp', 'chirr', 'chits', 'chive', 'chivy', 'chock', 'choir', 'choke', 'choky', 'chomp', 'chord', 'chore', 'chows', 'chubs', 'chuck', 'chufa', 'chuff', 'chugs', 'chump', 'chums', 'chunk', 'churl', 'churn', 'churr', 'chute', 'chyle', 'chyme', 'cicer', 'cider', 'cigar', 'cimex', 'cinch', 'circe', 'cisco', 'cissy', 'cites', 'civet', 'civic', 'civil', 'clack', 'clade', 'clads', 'claim', 'clamp', 'clams', 'clang', 'clank', 'clans', 'claps', 'clark', 'claro', 'clary', 'clash', 'clasp', 'class', 'clast', 'claws', 'clays', 'clean', 'clear', 'cleat', 'clefs', 'cleft', 'clerk', 'clews', 'click', 'cliff', 'climb', 'clime', 'cline', 'cling', 'clink', 'clive', 'cloak', 'clock', 'clods', 'clogs', 'clomp', 'clone', 'clons', 'clops', 'close', 'cloth', 'clots', 'cloud', 'clout', 'clove', 'clown', 'cloys', 'cloze', 'clubs', 'cluck', 'clues', 'clump', 'clunk', 'clyde', 'coach', 'coact', 'coals', 'coapt', 'coast', 'coati', 'coats', 'cobia', 'cobol', 'cobra', 'cocas', 'cocci', 'cocks', 'cocky', 'cocoa', 'cocos', 'cocus', 'codas', 'coder', 'codes', 'codex', 'codon', 'cohos', 'coifs', 'coign', 'coils', 'coins', 'coirs', 'cokes', 'colas', 'colds', 'colic', 'colly', 'colon', 'color', 'colts', 'colza', 'comal', 'comas', 'combo', 'comer', 'comet', 'comfy', 'comic', 'comma', 'comps', 'comte', 'conch', 'condo', 'cones', 'coney', 'conga', 'conge', 'congo', 'conic', 'conks', 'conns', 'conoy', 'conto', 'cooks', 'cooky', 'cools', 'cooly', 'coons', 'coops', 'coots', 'copal', 'copes', 'copra', 'copse', 'coral', 'cords', 'corer', 'cores', 'corgi', 'corks', 'corky', 'corms', 'corns', 'cornu', 'corny', 'corps', 'corse', 'cosec', 'costa', 'costs', 'cotan', 'cotes', 'couch', 'cough', 'count', 'coupe', 'court', 'couth', 'coven', 'cover', 'coves', 'covet', 'covey', 'cower', 'cowls', 'cowry', 'coxes', 'coyly', 'coyol', 'coypu', 'cozen', 'crabs', 'crack', 'craft', 'crags', 'crake', 'cramp', 'crams', 'crane', 'crank', 'crape', 'craps', 'crash', 'crass', 'crate', 'crave', 'crawl', 'craws', 'craze', 'crazy', 'creak', 'cream', 'credo', 'creed', 'creek', 'creel', 'creep', 'crees', 'crepe', 'cress', 'crest', 'crete', 'crews', 'cribs', 'crick', 'crier', 'cries', 'crime', 'crimp', 'crisp', 'crith', 'croak', 'croat', 'crock', 'croft', 'crone', 'cronk', 'crony', 'crook', 'croon', 'crops', 'crore', 'cross', 'croup', 'crowd', 'crown', 'crows', 'crude', 'cruds', 'cruel', 'cruet', 'crumb', 'crump', 'cruse', 'crush', 'crust', 'crypt', 'ctene', 'cuban', 'cubas', 'cubby', 'cubeb', 'cubes', 'cubic', 'cubit', 'cuddy', 'cukes', 'culex', 'culls', 'culms', 'cults', 'cumin', 'cunts', 'cupel', 'cupid', 'cuppa', 'curbs', 'curds', 'cured', 'curet', 'curia', 'curie', 'curio', 'curls', 'curly', 'curry', 'curse', 'curst', 'curve', 'curvy', 'cushy', 'cusks', 'cusps', 'cutch', 'cutes', 'cutin', 'cutis', 'cyans', 'cycad', 'cycas', 'cycle', 'cyder', 'cylix', 'cymas', 'cymes', 'cymry', 'cynic', 'cypre', 'cyril', 'cyrus', 'cysts', 'cytol', 'czars', 'czech', 'dacha', 'dadas', 'daddy', 'dados', 'dafla', 'dagga', 'dagon', 'dagos', 'daily', 'dairy', 'daisy', 'dalea', 'dalis', 'dally', 'damar', 'dames', 'damns', 'damon', 'damps', 'dance', 'dandy', 'danes', 'dante', 'daraf', 'darks', 'darns', 'darts', 'dated', 'datum', 'daubs', 'daunt', 'david', 'davis', 'davit', 'dawns', 'dayan', 'dazed', 'dazes', 'dazmo', 'deads', 'deals', 'deans', 'dears', 'deary', 'death', 'debar', 'debit', 'debts', 'debug', 'debut', 'decal', 'decay', 'decor', 'decoy', 'decry', 'deeds', 'deeps', 'deers', 'defat', 'defer', 'defog', 'degas', 'deice', 'deify', 'deign', 'deism', 'deist', 'deity', 'dekko', 'dekni', 'delay', 'delfs', 'delft', 'delhi', 'delta', 'delve', 'demob', 'demon', 'demur', 'deneb', 'denim', 'dense', 'dents', 'depot', 'depth', 'derby', 'derca', 'derma', 'desex', 'desks', 'desmo', 'deter', 'deuce', 'devil', 'devon', 'dewar', 'dewey', 'dezmo', 'dhaks', 'dhava', 'dhole', 'dhoti', 'dhows', 'dials', 'diana', 'diary', 'diazo', 'dicer', 'dices', 'dicey', 'dicks', 'dicky', 'dicot', 'didos', 'diets', 'digit', 'dikes', 'dildo', 'dills', 'dimer', 'dimes', 'dimly', 'dinar', 'diner', 'dines', 'dinge', 'dingo', 'dings', 'dingy', 'dinka', 'dinks', 'dinky', 'dints', 'diode', 'diols', 'dioon', 'dipus', 'dirca', 'dirge', 'dirks', 'dirts', 'dirty', 'disco', 'discs', 'dishy', 'disks', 'ditas', 'ditch', 'ditto', 'ditty', 'divan', 'divas', 'diver', 'divot', 'divvy', 'diwan', 'dixie', 'dizen', 'dizzy', 'djinn', 'dobra', 'docks', 'dodge', 'dodgy', 'dodos', 'doers', 'doffs', 'doges', 'doggo', 'doggy', 'dogie', 'dogma', 'doily', 'dojya', 'dolce', 'doles', 'dolls', 'dolly', 'dolor', 'dolts', 'domed', 'domes', 'donar', 'donas', 'donee', 'dongs', 'donna', 'donne', 'donor', 'donut', 'doors', 'dopas', 'doped', 'dopes', 'dopey', 'doric', 'doris', 'dorms', 'dormy', 'dosed', 'doses', 'dotes', 'dotty', 'doubt', 'dough', 'doura', 'douse', 'dover', 'doves', 'dowdy', 'dowel', 'dower', 'downy', 'dowry', 'dowse', 'doyen', 'doyly', 'dozen', 'dozer', 'dozes', 'draba', 'drabs', 'draco', 'draft', 'drags', 'drain', 'drake', 'drama', 'drams', 'drape', 'drawl', 'drawn', 'draws', 'drays', 'dread', 'dream', 'drear', 'dreck', 'dregs', 'dress', 'dribs', 'dried', 'drier', 'dries', 'drift', 'drill', 'drily', 'drink', 'drips', 'drive', 'droll', 'drome', 'drone', 'drool', 'droop', 'dross', 'drove', 'drown', 'drubs', 'drugs', 'druid', 'drums', 'drunk', 'drupe', 'druse', 'druze', 'dryad', 'dryas', 'dryer', 'dryly', 'duads', 'duals', 'ducal', 'ducat', 'duchy', 'ducky', 'ducts', 'dudes', 'duels', 'duets', 'duffs', 'dulls', 'dully', 'dulse', 'dumas', 'dumbs', 'dummy', 'dumps', 'dumpy', 'dunce', 'dunes', 'dungs', 'dunks', 'duomo', 'dupes', 'duple', 'dural', 'duras', 'durio', 'durra', 'durum', 'dusks', 'dusky', 'dusts', 'dusty', 'dutch', 'duvet', 'dwarf', 'dwell', 'dyads', 'dyaus', 'dyers', 'dying', 'dykes', 'dylan', 'dynes', 'eager', 'eagle', 'eagre', 'eared', 'earls', 'early', 'earns', 'earth', 'eased', 'easel', 'eases', 'easts', 'eater', 'eaves', 'eblis', 'ebons', 'ebony', 'echos', 'eclat', 'edema', 'edgar', 'edged', 'edger', 'edges', 'edict', 'edify', 'edits', 'educe', 'edwin', 'eerie', 'egest', 'eggar', 'egger', 'egret', 'egypt', 'eider', 'eidos', 'eight', 'eject', 'eland', 'elans', 'elate', 'elbow', 'elder', 'elect', 'elegy', 'elemi', 'elfin', 'elide', 'eliot', 'elite', 'elope', 'elops', 'elude', 'elute', 'elver', 'elves', 'elvis', 'email', 'embed', 'ember', 'emcee', 'emeer', 'emend', 'emery', 'emirs', 'emits', 'emmer', 'emmet', 'emote', 'empty', 'enact', 'enate', 'ended', 'endow', 'endue', 'enema', 'enemy', 'enjoy', 'ennui', 'enols', 'enrol', 'ensky', 'ensue', 'enter', 'entry', 'envoi', 'envoy', 'eosin', 'epees', 'ephah', 'ephas', 'epics', 'epoch', 'epoxy', 'equal', 'equid', 'equip', 'equus', 'erase', 'erato', 'erect', 'ergot', 'erica', 'ernes', 'ernst', 'erode', 'erose', 'error', 'erses', 'eruca', 'eruct', 'erupt', 'esker', 'essay', 'essex', 'ester', 'ether', 'ethic', 'ethos', 'ethyl', 'etnas', 'etude', 'euler', 'euros', 'evade', 'evans', 'event', 'evert', 'every', 'evict', 'evils', 'evoke', 'ewers', 'exact', 'exalt', 'exams', 'excel', 'execs', 'exert', 'exile', 'exist', 'exits', 'exode', 'expel', 'extol', 'extra', 'exude', 'exult', 'eyras', 'eyres', 'eyrie', 'eyrir', 'fable', 'faced', 'facer', 'faces', 'facet', 'facia', 'facts', 'faddy', 'faded', 'fades', 'fados', 'faery', 'fagin', 'fagus', 'fails', 'fains', 'faint', 'fairs', 'fairy', 'faith', 'faker', 'fakes', 'fakir', 'fakyo', 'falco', 'falla', 'falls', 'false', 'famed', 'fames', 'fancy', 'fangs', 'fanja', 'fanny', 'faqir', 'farad', 'farce', 'fares', 'farms', 'faros', 'farsi', 'farts', 'fasts', 'fatal', 'fated', 'fatso', 'fatty', 'fatwa', 'fauld', 'fault', 'fauna', 'fauns', 'faust', 'fauve', 'favor', 'favus', 'fawns', 'faxes', 'fazed', 'fazes', 'fears', 'feast', 'feats', 'fecal', 'feces', 'feeds', 'feels', 'feign', 'feint', 'feist', 'felid', 'felis', 'fella', 'fells', 'felly', 'felon', 'felts', 'femur', 'fence', 'fends', 'feoff', 'feral', 'feria', 'fermi', 'ferns', 'ferny', 'ferry', 'fesse', 'fetal', 'fetch', 'fetid', 'fetor', 'fetus', 'feuds', 'fever', 'fewer', 'fiats', 'fiber', 'fibre', 'fices', 'fichu', 'ficus', 'fiefs', 'field', 'fiend', 'fiery', 'fifes', 'fifth', 'fifty', 'fight', 'filar', 'filch', 'filer', 'files', 'filet', 'fille', 'fills', 'filly', 'films', 'filmy', 'filth', 'filum', 'final', 'finch', 'finds', 'finer', 'fines', 'finis', 'finks', 'finns', 'fiord', 'fired', 'fires', 'firms', 'first', 'firth', 'fiscs', 'fishy', 'fists', 'fitch', 'fitly', 'fiver', 'fives', 'fixed', 'fixer', 'fixes', 'fizzy', 'fjord', 'flabs', 'flack', 'flail', 'flair', 'flake', 'flaky', 'flame', 'flank', 'flans', 'flaps', 'flare', 'flash', 'flask', 'flats', 'flaws', 'flays', 'fleas', 'fleck', 'fleer', 'flees', 'fleet', 'flesh', 'flick', 'flier', 'flies', 'fling', 'flint', 'flips', 'flirt', 'flits', 'float', 'flock', 'flocs', 'floes', 'flogs', 'flood', 'floor', 'flops', 'flora', 'flory', 'floss', 'flour', 'flout', 'flows', 'flubs', 'flues', 'fluff', 'fluid', 'fluke', 'fluky', 'flume', 'flump', 'flunk', 'fluor', 'flush', 'flute', 'flyer', 'foals', 'foams', 'foamy', 'focal', 'focus', 'foehn', 'fogey', 'foggy', 'fohns', 'foils', 'foist', 'folds', 'folie', 'folio', 'folks', 'folly', 'fomes', 'fondu', 'fonts', 'foods', 'fools', 'foram', 'foray', 'force', 'fords', 'fores', 'forge', 'forgo', 'forks', 'forms', 'forte', 'forth', 'forts', 'forty', 'forum', 'fossa', 'fosse', 'found', 'fount', 'fours', 'fovea', 'fowls', 'foyer', 'frail', 'frame', 'franc', 'frank', 'fraps', 'frats', 'fraud', 'frays', 'freak', 'frees', 'freon', 'fresh', 'fress', 'frets', 'freud', 'freya', 'freyr', 'friar', 'fried', 'frier', 'fries', 'frill', 'frisk', 'frizz', 'frock', 'frogs', 'frond', 'front', 'frore', 'frost', 'froth', 'frown', 'fruit', 'frump', 'fryer', 'fucks', 'fucus', 'fudge', 'fuels', 'fugal', 'fuggy', 'fugue', 'fujis', 'fulah', 'fulls', 'fully', 'fumed', 'fumes', 'funds', 'fungi', 'funks', 'funky', 'funny', 'furan', 'furls', 'furor', 'furry', 'furze', 'fused', 'fusee', 'fusil', 'fussy', 'fusty', 'fuzee', 'fuzes', 'fuzzy', 'gabby', 'gable', 'gabon', 'gaddi', 'gadus', 'gaels', 'gaffe', 'gaffs', 'gages', 'gaily', 'gaits', 'gaius', 'galas', 'galax', 'galea', 'galen', 'gales', 'galls', 'gamba', 'games', 'gamey', 'gamin', 'gamma', 'gammy', 'gamps', 'gamut', 'ganef', 'gangs', 'ganja', 'ganof', 'gaols', 'garbo', 'garbs', 'gasps', 'gassy', 'gates', 'gator', 'gauds', 'gaudy', 'gauge', 'gauls', 'gaunt', 'gaurs', 'gauss', 'gauze', 'gauzy', 'gavel', 'gavia', 'gawks', 'gawky', 'gayal', 'gayly', 'gazes', 'gears', 'gecko', 'geeks', 'gelds', 'gelid', 'gelly', 'gelts', 'gemma', 'genes', 'genet', 'genic', 'genie', 'genip', 'genoa', 'genre', 'genus', 'geode', 'germs', 'germy', 'gesso', 'getas', 'getup', 'geums', 'ghana', 'ghees', 'ghent', 'ghost', 'ghoul', 'giant', 'gibes', 'giddy', 'gifts', 'gigot', 'gigue', 'gilds', 'gilts', 'gimel', 'gimps', 'gimpy', 'ginep', 'ginzo', 'gipsy', 'girds', 'girls', 'giros', 'girth', 'gismo', 'gists', 'given', 'giver', 'gives', 'gizmo', 'gjopa', 'glace', 'glade', 'glads', 'gland', 'glans', 'glare', 'glary', 'glass', 'glaux', 'glaze', 'gleam', 'glean', 'gleba', 'glebe', 'glees', 'gleet', 'glenn', 'glens', 'glial', 'glide', 'glint', 'gloam', 'gloat', 'globe', 'globs', 'glogg', 'gloms', 'gloom', 'glops', 'glory', 'gloss', 'glove', 'glows', 'gluck', 'glued', 'glues', 'gluey', 'glume', 'gluon', 'gluts', 'glyph', 'gnarl', 'gnash', 'gnats', 'gnaws', 'gnome', 'goads', 'goals', 'goats', 'gobio', 'godly', 'goers', 'gofer', 'going', 'golds', 'golem', 'golfs', 'golgi', 'gonad', 'gondi', 'goner', 'gongs', 'gonif', 'gonne', 'gonzo', 'goody', 'gooey', 'goofs', 'goofy', 'gooks', 'goons', 'goony', 'goops', 'goose', 'goosy', 'goral', 'gores', 'gorge', 'gorki', 'gorse', 'goths', 'gouda', 'goudy', 'gouge', 'gourd', 'gouts', 'gouty', 'gowns', 'grabs', 'grace', 'grade', 'grads', 'graft', 'grail', 'grain', 'grama', 'grams', 'grand', 'grant', 'grape', 'graph', 'grapy', 'grasp', 'grass', 'grate', 'grave', 'gravy', 'grays', 'graze', 'great', 'grebe', 'greco', 'greed', 'greek', 'green', 'greet', 'greys', 'grids', 'grief', 'grill', 'grime', 'grimm', 'grimy', 'grind', 'grins', 'griot', 'gripe', 'grips', 'grist', 'grits', 'groan', 'groat', 'grogs', 'groin', 'groom', 'grope', 'gross', 'grosz', 'grots', 'group', 'grout', 'grove', 'growl', 'grown', 'grows', 'grubs', 'gruel', 'gruff', 'grume', 'grump', 'grunt', 'guama', 'guano', 'guans', 'guard', 'guars', 'guava', 'guchi', 'gucks', 'guess', 'guest', 'guffs', 'guide', 'guild', 'guile', 'guilt', 'guise', 'gulas', 'gulch', 'gulfs', 'gulls', 'gully', 'gulps', 'gumbo', 'gumma', 'gummy', 'gunks', 'gunny', 'guppy', 'gushy', 'gusto', 'gusts', 'gusty', 'gutsy', 'guyot', 'gybes', 'gypsy', 'gyral', 'gyres', 'gyros', 'gyrus', 'habit', 'hacek', 'hacks', 'hadal', 'hades', 'hadji', 'haems', 'hafts', 'haick', 'haida', 'haiks', 'haiku', 'hails', 'hairs', 'hairy', 'haiti', 'hajji', 'hakea', 'hakes', 'hakim', 'hakka', 'halal', 'haler', 'hales', 'halls', 'halma', 'halms', 'halos', 'halts', 'halve', 'haman', 'hammy', 'hands', 'handy', 'hangs', 'hanks', 'hanky', 'hanoi', 'haoma', 'haply', 'happy', 'hardy', 'harem', 'hares', 'harks', 'harms', 'harps', 'harpy', 'harry', 'harsh', 'harts', 'hasid', 'hasps', 'haste', 'hasty', 'hatch', 'hated', 'hater', 'hates', 'haulm', 'hauls', 'haunt', 'hausa', 'havel', 'haven', 'haves', 'havoc', 'hawks', 'hawse', 'haydn', 'hayes', 'hazan', 'hazel', 'hazes', 'heady', 'heals', 'heaps', 'heard', 'hears', 'heart', 'heath', 'heats', 'heave', 'heavy', 'hecht', 'hedge', 'heeds', 'heels', 'hefts', 'hefty', 'heinz', 'heirs', 'heist', 'helas', 'helen', 'helix', 'hello', 'hells', 'helms', 'helot', 'helps', 'helve', 'hemal', 'hemes', 'hemic', 'hemin', 'hemps', 'hence', 'henna', 'henry', 'herat', 'herbs', 'herds', 'herms', 'heron', 'hertz', 'heths', 'hevea', 'hewer', 'hexad', 'hexed', 'hexes', 'hides', 'highs', 'hiker', 'hikes', 'hilar', 'hilly', 'hilts', 'hilum', 'hilus', 'hindi', 'hinds', 'hindu', 'hinge', 'hinny', 'hints', 'hippo', 'hippy', 'hired', 'hirer', 'hires', 'hitch', 'hitwi', 'hives', 'hoagy', 'hoard', 'hoars', 'hoary', 'hobby', 'hobos', 'hocks', 'hogan', 'hoggs', 'hoist', 'hokan', 'hokey', 'hokum', 'holds', 'holes', 'holey', 'holla', 'hollo', 'holly', 'homer', 'homes', 'homey', 'homos', 'hondo', 'hones', 'honey', 'honks', 'honky', 'honor', 'hooch', 'hoods', 'hooey', 'hoofs', 'hooks', 'hooky', 'hoops', 'hoper', 'hopes', 'hopis', 'horde', 'horns', 'horny', 'horse', 'horst', 'hosea', 'hosta', 'hosts', 'hotel', 'hotly', 'hound', 'houri', 'hours', 'house', 'hovel', 'hover', 'howdy', 'howes', 'howls', 'hoyle', 'hubby', 'hucks', 'huffs', 'huffy', 'hulas', 'hulks', 'hulky', 'hullo', 'hulls', 'human', 'humic', 'humid', 'humin', 'humor', 'humps', 'humus', 'hunch', 'hurls', 'huron', 'hurry', 'hurts', 'husks', 'husky', 'hussy', 'hutch', 'hydra', 'hyena', 'hymen', 'hymns', 'hyoid', 'hypes', 'hypha', 'hypos', 'hyrax', 'hyson', 'iambs', 'icaco', 'ichor', 'icily', 'icing', 'ictic', 'ictus', 'icyaw', 'idaho', 'ideal', 'ideas', 'idgof', 'idiom', 'idiot', 'idler', 'idles', 'idols', 'idyll', 'idyls', 'igloo', 'ikons', 'ilama', 'ileum', 'ileus', 'iliac', 'iliad', 'ilion', 'ilium', 'image', 'imago', 'imams', 'imaum', 'imbed', 'imbue', 'imide', 'immix', 'impel', 'imply', 'inane', 'inapt', 'incan', 'incas', 'incur', 'incus', 'index', 'india', 'indic', 'indra', 'indri', 'indue', 'indus', 'inept', 'inert', 'infer', 'infix', 'infos', 'infra', 'inger', 'ingot', 'inhex', 'inion', 'injun', 'inkle', 'inlay', 'inlet', 'inner', 'input', 'inset', 'inter', 'intro', 'inula', 'inure', 'invar', 'iodin', 'ionic', 'iotas', 'iowan', 'irani', 'iraqi', 'irate', 'irena', 'irish', 'irons', 'irony', 'isaac', 'islam', 'islay', 'isles', 'islet', 'issue', 'italy', 'itchy', 'items', 'ivied', 'ivory', 'iwbol', 'iwmod', 'ixias', 'izars', 'jabot', 'jacks', 'jacob', 'jaded', 'jades', 'jaggy', 'jagua', 'jails', 'jakes', 'jambs', 'james', 'janus', 'japan', 'japes', 'jason', 'jaunt', 'javan', 'javas', 'jawan', 'jawed', 'jazzy', 'jeans', 'jeers', 'jehad', 'jello', 'jells', 'jelly', 'jemmy', 'jenny', 'jerez', 'jerks', 'jerky', 'jerry', 'jests', 'jesus', 'jetty', 'jewel', 'jewry', 'jibes', 'jiffy', 'jihad', 'jilts', 'jimmy', 'jingo', 'jinja', 'jinks', 'jinni', 'jiqui', 'jirga', 'jives', 'jocks', 'johns', 'joins', 'joint', 'joist', 'joker', 'jokes', 'jolly', 'jolts', 'jolty', 'jonah', 'jones', 'jorum', 'joule', 'joust', 'jowls', 'jowly', 'joyce', 'judah', 'judas', 'judge', 'judos', 'juice', 'juicy', 'julep', 'jumbo', 'jumps', 'jumpy', 'junco', 'junks', 'junky', 'junta', 'junto', 'jural', 'juror', 'justs', 'jutes', 'kaaba', 'kabob', 'kafir', 'kafka', 'kails', 'kakis', 'kales', 'kalif', 'kamas', 'kamba', 'kamis', 'kansa', 'kanzu', 'kaons', 'kaphs', 'kapok', 'kappa', 'kaput', 'karat', 'karen', 'karma', 'kasha', 'katar', 'kauri', 'kaury', 'kavas', 'kayak', 'kazak', 'kazoo', 'keats', 'kebab', 'keels', 'keens', 'keeps', 'kelly', 'kelps', 'kelpy', 'kelts', 'kempt', 'kenaf', 'kenos', 'kenya', 'kerbs', 'kerns', 'ketch', 'keyco', 'keyed', 'khadi', 'khaki', 'khans', 'khats', 'khaya', 'khmer', 'kiaat', 'kiang', 'kibes', 'kicks', 'kiddy', 'kikes', 'kiley', 'kills', 'kilns', 'kilts', 'kinco', 'kinds', 'kines', 'kinin', 'kinks', 'kinky', 'kinos', 'kiosk', 'kiowa', 'kirks', 'kites', 'kiths', 'kitty', 'kiwis', 'klans', 'klick', 'klutz', 'knack', 'knaps', 'knave', 'knead', 'kneel', 'knees', 'knell', 'knife', 'knish', 'knits', 'knobs', 'knock', 'knoll', 'knots', 'knout', 'known', 'knows', 'koala', 'koans', 'kobus', 'kogia', 'kohls', 'koine', 'kokpa', 'kolas', 'kongo', 'kooks', 'kooky', 'kopek', 'kopje', 'koran', 'korea', 'kotar', 'kotos', 'kotow', 'kraal', 'kraft', 'krait', 'kraut', 'krebs', 'krill', 'krona', 'krone', 'kroon', 'krubi', 'kudos', 'kudzu', 'kumis', 'kurta', 'kurus', 'kusan', 'kutch', 'kvass', 'kwela', 'kyats', 'kylie', 'kylix', 'kyoto', 'laban', 'label', 'labor', 'laced', 'lacer', 'laces', 'lacid', 'lacks', 'laden', 'lades', 'ladin', 'ladku', 'ladle', 'lagan', 'lager', 'lahar', 'laics', 'laird', 'lairs', 'laity', 'laius', 'lakes', 'lakhs', 'lally', 'lambs', 'lamia', 'lamna', 'lamps', 'lanai', 'lance', 'lanes', 'laney', 'lanky', 'lansa', 'lapel', 'lapin', 'lapps', 'lapse', 'larch', 'lards', 'large', 'largo', 'larid', 'larix', 'larks', 'larus', 'larva', 'laser', 'lasso', 'lasts', 'latch', 'later', 'latex', 'lathe', 'lathi', 'latin', 'latke', 'laugh', 'lavas', 'laver', 'laves', 'lawns', 'laxly', 'layer', 'layia', 'layup', 'lazar', 'lazes', 'leach', 'leads', 'leafs', 'leafy', 'leaks', 'leaky', 'leans', 'leaps', 'learn', 'lears', 'leary', 'lease', 'leash', 'least', 'leave', 'ledge', 'ledum', 'leech', 'leeds', 'leeks', 'leers', 'leery', 'lefts', 'lefty', 'legal', 'leger', 'leggy', 'leigh', 'lemma', 'lemna', 'lemon', 'lemur', 'lends', 'lenin', 'lense', 'lento', 'leone', 'lepas', 'leper', 'leppy', 'lepus', 'lerot', 'letch', 'lethe', 'letup', 'levee', 'level', 'lever', 'levis', 'lewis', 'lexis', 'liana', 'liars', 'libby', 'libel', 'libra', 'libya', 'lichi', 'licit', 'licks', 'lidar', 'lidos', 'liege', 'liens', 'lifer', 'lifts', 'ligan', 'liger', 'light', 'ligne', 'liked', 'liken', 'likes', 'lilac', 'lilts', 'liman', 'limas', 'limax', 'limbo', 'limbs', 'limen', 'limey', 'limit', 'limns', 'limos', 'limps', 'linac', 'lindy', 'lined', 'linen', 'liner', 'lingo', 'lings', 'linin', 'links', 'linos', 'lints', 'linum', 'lipid', 'liras', 'lisle', 'lisps', 'liszt', 'litas', 'liter', 'lites', 'lithe', 'litre', 'liven', 'liver', 'livid', 'llama', 'llano', 'lloyd', 'loach', 'loads', 'loafs', 'loams', 'loamy', 'loans', 'loasa', 'loath', 'lobar', 'lobby', 'lobed', 'lobes', 'local', 'lochs', 'locks', 'locos', 'locum', 'locus', 'lodes', 'lodge', 'loess', 'lofts', 'lofty', 'logan', 'loges', 'logic', 'logos', 'lohan', 'loins', 'lolls', 'lolly', 'loner', 'loofa', 'looks', 'looms', 'loons', 'loony', 'loops', 'loopy', 'loose', 'loots', 'lopes', 'loren', 'lores', 'lorry', 'loser', 'loses', 'lossy', 'lotas', 'lotic', 'lotte', 'lotto', 'lotus', 'lough', 'louis', 'loupe', 'lours', 'louse', 'lousy', 'louts', 'loved', 'lover', 'loves', 'lowan', 'lower', 'lowly', 'lowry', 'loxes', 'loxia', 'loyal', 'luaus', 'lubes', 'lucid', 'lucks', 'lucky', 'lucre', 'luffa', 'luffs', 'luger', 'luges', 'lulay', 'lulls', 'lully', 'lumen', 'lumps', 'lumpy', 'lunar', 'lunas', 'lunch', 'lunda', 'lunge', 'lungi', 'lungs', 'lunts', 'lupin', 'lupus', 'lurch', 'lures', 'lurid', 'lurks', 'lusts', 'lusty', 'lutes', 'lutra', 'luxes', 'lycee', 'lydia', 'lygus', 'lying', 'lymph', 'lynch', 'lyres', 'lyric', 'lysin', 'lysis', 'lysol', 'lyssa', 'maars', 'macao', 'macaw', 'macer', 'maces', 'macho', 'machs', 'macks', 'macon', 'macro', 'madam', 'madia', 'madly', 'mafia', 'magic', 'magma', 'magus', 'mahdi', 'mahoe', 'maids', 'maidu', 'mails', 'maims', 'maine', 'maize', 'majas', 'major', 'maker', 'makes', 'makos', 'malar', 'malay', 'maleo', 'males', 'malik', 'malls', 'malta', 'malto', 'malts', 'malus', 'malva', 'mamas', 'mamba', 'mambo', 'mamey', 'mamma', 'mammy', 'mande', 'manes', 'manet', 'manga', 'mange', 'mango', 'mangy', 'mania', 'manic', 'manis', 'manky', 'manly', 'manna', 'manor', 'manse', 'manta', 'manul', 'manus', 'maori', 'maple', 'mapra', 'maras', 'march', 'marcs', 'mares', 'marge', 'maria', 'marks', 'marls', 'marly', 'marry', 'marsh', 'marts', 'masai', 'maser', 'masks', 'mason', 'masse', 'masts', 'matai', 'match', 'mated', 'mater', 'mates', 'matey', 'maths', 'matte', 'matts', 'matzo', 'mauls', 'maund', 'mauve', 'maven', 'mavin', 'mavis', 'maxim', 'maxis', 'mayan', 'mayas', 'maybe', 'mayer', 'mayor', 'mazed', 'mazer', 'mazes', 'meals', 'mealy', 'means', 'meany', 'meats', 'meaty', 'mecca', 'medal', 'medea', 'medic', 'medoc', 'meeds', 'meeks', 'meets', 'melba', 'melds', 'melee', 'meles', 'melia', 'melon', 'melts', 'memos', 'mends', 'mensa', 'menus', 'meows', 'mercy', 'meres', 'merge', 'merit', 'merle', 'merls', 'merry', 'mesas', 'mesic', 'meson', 'messy', 'mesua', 'metal', 'meter', 'metes', 'metic', 'metis', 'metre', 'metro', 'meuse', 'mewls', 'mezzo', 'miami', 'miaou', 'miaow', 'miasm', 'miaul', 'micah', 'micas', 'micks', 'micro', 'midas', 'middy', 'midge', 'midis', 'midst', 'miens', 'miffs', 'might', 'mikes', 'milan', 'milch', 'miler', 'milks', 'milky', 'mills', 'milts', 'milya', 'mimeo', 'mimer', 'mimes', 'mimic', 'mimir', 'mimus', 'minah', 'minas', 'mince', 'minds', 'mined', 'miner', 'mines', 'minge', 'mingy', 'minim', 'minis', 'minks', 'minor', 'minos', 'mints', 'minty', 'minus', 'mired', 'mires', 'mirid', 'mirky', 'mirth', 'misdo', 'miser', 'misos', 'missy', 'mists', 'misty', 'miter', 'mites', 'mitra', 'mitre', 'mitts', 'mixed', 'mixer', 'mixes', 'mizen', 'mnium', 'moans', 'moats', 'mocha', 'mocks', 'modal', 'model', 'modem', 'modes', 'mogul', 'mohos', 'moils', 'moire', 'moist', 'mojdi', 'mojos', 'mokes', 'molal', 'molar', 'molas', 'molds', 'moldy', 'moles', 'molle', 'molls', 'molly', 'molto', 'molts', 'momma', 'mommy', 'momus', 'monad', 'monal', 'monas', 'money', 'mongo', 'monks', 'monos', 'monte', 'month', 'mooch', 'moods', 'moody', 'moong', 'moons', 'moony', 'moore', 'moors', 'moose', 'moots', 'moped', 'mopes', 'moral', 'moray', 'morel', 'mores', 'morns', 'moron', 'morph', 'morse', 'morus', 'mosan', 'moses', 'mosey', 'mossy', 'mosts', 'mosul', 'motel', 'motes', 'motet', 'moths', 'mothy', 'motif', 'motor', 'motto', 'motts', 'mould', 'moult', 'mound', 'mount', 'mourn', 'mouse', 'mousy', 'mouth', 'moved', 'mover', 'moves', 'movie', 'mower', 'moxie', 'mucin', 'mucks', 'mucky', 'mucor', 'mucus', 'muddy', 'mudra', 'muffs', 'mufti', 'muggy', 'mugil', 'mujik', 'mulch', 'mulct', 'mules', 'mulla', 'mulls', 'mummy', 'mumps', 'munch', 'munda', 'muons', 'mural', 'murks', 'murky', 'murre', 'musca', 'musci', 'muser', 'muses', 'musgu', 'mushy', 'music', 'musks', 'musky', 'mussy', 'musth', 'musts', 'musty', 'muted', 'mutes', 'mutts', 'muzzy', 'mylar', 'mynah', 'mynas', 'myoid', 'myoma', 'myope', 'myrrh', 'mysis', 'myths', 'nabob', 'nacho', 'nacom', 'nacre', 'nadir', 'nahum', 'naiad', 'naias', 'naifs', 'nails', 'naira', 'naive', 'naked', 'namer', 'names', 'nance', 'nancy', 'nandu', 'nanny', 'naomi', 'napes', 'nappy', 'narcs', 'nards', 'naris', 'narks', 'nasal', 'nasty', 'nasua', 'natal', 'nates', 'natty', 'nauch', 'naval', 'navel', 'naves', 'navvy', 'nawab', 'nazis', 'neaps', 'nears', 'neats', 'necks', 'needs', 'needy', 'neems', 'negro', 'negus', 'nehru', 'neigh', 'neons', 'nepal', 'nerds', 'nerve', 'nervy', 'nests', 'netts', 'never', 'neves', 'nevus', 'newel', 'newly', 'newsy', 'newts', 'nexus', 'ngwee', 'niche', 'nicks', 'nidus', 'niece', 'nifty', 'nigga', 'nighs', 'night', 'nihil', 'nines', 'ninja', 'ninny', 'ninon', 'ninth', 'nintu', 'niobe', 'nipas', 'nippy', 'nisan', 'nisei', 'nisus', 'niter', 'nitid', 'nitre', 'nixon', 'nobel', 'noble', 'nobly', 'nocks', 'nodes', 'noels', 'noemi', 'noise', 'noisy', 'nomad', 'nomas', 'nomes', 'nonce', 'nones', 'nooks', 'nooky', 'noons', 'noose', 'nopal', 'noria', 'norma', 'norms', 'norse', 'north', 'nosed', 'noses', 'nosey', 'notch', 'noted', 'nouns', 'novas', 'novel', 'nubby', 'nubia', 'nucha', 'nudes', 'nudge', 'nukes', 'nulls', 'numbs', 'numen', 'numsi', 'nurse', 'nutty', 'nyala', 'nylon', 'nymph', 'nyssa', 'oaken', 'oakum', 'oasis', 'oasts', 'oaten', 'oaves', 'obeah', 'obese', 'obeys', 'obits', 'oboes', 'occur', 'ocean', 'ocher', 'ochna', 'ochre', 'octad', 'octal', 'octet', 'oddly', 'odist', 'odium', 'odors', 'odour', 'offal', 'offer', 'often', 'ogees', 'ogive', 'ogler', 'ogles', 'ogres', 'ohmic', 'oiled', 'oiler', 'oinks', 'okapi', 'okays', 'okehs', 'okras', 'olden', 'older', 'oldie', 'olein', 'oleos', 'olive', 'ollas', 'ology', 'omaha', 'omani', 'omega', 'omens', 'omits', 'onces', 'onion', 'onset', 'oomph', 'ootid', 'oozes', 'opahs', 'opals', 'opens', 'opera', 'opine', 'opium', 'opsin', 'optic', 'orach', 'orals', 'orang', 'orans', 'orate', 'orbit', 'orcas', 'order', 'oread', 'organ', 'oriel', 'orion', 'oriya', 'orlon', 'orlop', 'ormer', 'orpin', 'orris', 'oryza', 'osage', 'osaka', 'oscan', 'oscar', 'osier', 'other', 'otpaf', 'ottar', 'otter', 'ouija', 'ounce', 'ousel', 'ousts', 'outdo', 'outer', 'outgo', 'outre', 'ouzel', 'ouzos', 'ovals', 'ovary', 'ovate', 'ovens', 'overs', 'overt', 'ovine', 'ovoid', 'ovolo', 'ovule', 'owing', 'owlet', 'owned', 'owner', 'oxbow', 'oxeye', 'oxide', 'oxime', 'oxlip', 'ozena', 'ozone', 'pacas', 'pacer', 'paces', 'pacha', 'packs', 'pacts', 'padda', 'paddy', 'pader', 'padre', 'paean', 'pagan', 'pager', 'pages', 'pails', 'paine', 'pains', 'paint', 'paisa', 'palas', 'palau', 'palis', 'palls', 'pally', 'palms', 'palmy', 'palsy', 'panax', 'panda', 'panel', 'panes', 'panga', 'pangs', 'panic', 'pansy', 'panto', 'pants', 'panty', 'papal', 'papas', 'papaw', 'paper', 'papio', 'papua', 'paras', 'parch', 'parer', 'pares', 'paris', 'parka', 'parks', 'parky', 'parrs', 'parry', 'parse', 'parsi', 'parts', 'party', 'parus', 'parve', 'pasch', 'paseo', 'pasha', 'passe', 'pasta', 'paste', 'pasts', 'pasty', 'patas', 'patch', 'pater', 'pates', 'patio', 'patsy', 'patty', 'pause', 'pavan', 'paved', 'pavis', 'pawer', 'pawky', 'pawls', 'pawns', 'paxes', 'payee', 'payer', 'peace', 'peach', 'peags', 'peaks', 'peaky', 'peals', 'peans', 'pearl', 'peats', 'peaty', 'peavy', 'pecan', 'pecks', 'pecos', 'pedal', 'peeks', 'peels', 'peens', 'peeps', 'peers', 'peeve', 'pekan', 'pekes', 'pekoe', 'pelew', 'pelfs', 'pelts', 'penal', 'pengo', 'penis', 'penni', 'penny', 'peons', 'peony', 'peppy', 'pepsi', 'perca', 'perch', 'percy', 'peril', 'perks', 'perky', 'perms', 'perry', 'pesah', 'pesky', 'pesos', 'pests', 'petal', 'peter', 'petty', 'pewee', 'pewit', 'phage', 'phase', 'phial', 'phlox', 'phoca', 'phone', 'phons', 'phony', 'photo', 'phots', 'phyle', 'physa', 'piano', 'picas', 'picea', 'pichi', 'picks', 'picky', 'picot', 'picul', 'picus', 'piece', 'piers', 'pieta', 'piety', 'piggy', 'pigmy', 'pikas', 'pikes', 'pilaf', 'pilar', 'pilau', 'pilaw', 'pilea', 'piles', 'pilot', 'pilus', 'pimas', 'pimps', 'pinch', 'pings', 'pinko', 'pinks', 'pinky', 'pinna', 'pinny', 'pinon', 'pinot', 'pinto', 'pints', 'pinus', 'pious', 'pipal', 'piper', 'pipes', 'pipet', 'pipit', 'pipra', 'pique', 'piste', 'pisum', 'pitas', 'pitch', 'piths', 'pithy', 'piton', 'pitta', 'piute', 'pivot', 'pixel', 'pixes', 'pixie', 'pizza', 'place', 'plage', 'plaid', 'plain', 'plait', 'plane', 'plank', 'plans', 'plant', 'plash', 'plasm', 'plate', 'plato', 'plats', 'platy', 'plays', 'plaza', 'plead', 'pleat', 'plebe', 'plica', 'plier', 'pliny', 'ploce', 'plods', 'plonk', 'plops', 'plots', 'plows', 'ploys', 'pluck', 'plugs', 'plumb', 'plume', 'plump', 'plums', 'plumy', 'plunk', 'plush', 'pluto', 'plyer', 'poach', 'pocks', 'podgy', 'poems', 'poesy', 'poets', 'pogey', 'pogge', 'poilu', 'point', 'poise', 'poker', 'pokes', 'pokey', 'polar', 'poler', 'poles', 'polio', 'polka', 'polls', 'polyp', 'pomes', 'pommy', 'pomps', 'ponca', 'ponce', 'ponds', 'pones', 'pongo', 'pooch', 'poods', 'poons', 'poops', 'poove', 'popes', 'poppy', 'porch', 'pores', 'porgy', 'porks', 'porno', 'porns', 'porta', 'porte', 'porto', 'ports', 'posed', 'poser', 'poses', 'posit', 'posse', 'posts', 'potto', 'potty', 'pouch', 'poufs', 'pound', 'pours', 'pouts', 'power', 'poxes', 'poyou', 'prams', 'prang', 'prank', 'prate', 'prats', 'prawn', 'praya', 'prays', 'preen', 'preps', 'press', 'prexy', 'preys', 'priam', 'price', 'prick', 'pricy', 'pride', 'pries', 'prigs', 'prima', 'prime', 'primo', 'primp', 'prims', 'prink', 'print', 'prion', 'prior', 'prise', 'prism', 'privy', 'prize', 'probe', 'prods', 'profs', 'prole', 'promo', 'proms', 'prone', 'prong', 'proof', 'props', 'prose', 'prosy', 'proto', 'proud', 'prove', 'prowl', 'prows', 'proxy', 'prude', 'prune', 'psalm', 'pseud', 'psoas', 'pubes', 'pubic', 'pubis', 'puces', 'pucka', 'pucks', 'pudge', 'pudgy', 'puffs', 'puffy', 'pukes', 'pukka', 'pulas', 'pules', 'pulex', 'pulls', 'pulps', 'pulpy', 'pulse', 'pumas', 'pumps', 'punch', 'pungs', 'punic', 'punks', 'punky', 'punts', 'pupal', 'pupas', 'pupil', 'puppy', 'purau', 'puree', 'purge', 'purim', 'purls', 'purrs', 'purse', 'pursy', 'puses', 'pushy', 'pussy', 'putts', 'putty', 'pygmy', 'pylon', 'pyres', 'pyrex', 'pyrus', 'pyxes', 'pyxie', 'pyxis', 'qatar', 'qibla', 'qophs', 'quack', 'quads', 'quaff', 'quags', 'quail', 'quake', 'qualm', 'quark', 'quart', 'quash', 'quasi', 'quays', 'queen', 'queer', 'quell', 'quern', 'query', 'quest', 'queue', 'quick', 'quids', 'quiet', 'quiff', 'quill', 'quilt', 'quins', 'quint', 'quips', 'quipu', 'quira', 'quire', 'quirk', 'quirt', 'quite', 'quito', 'quits', 'quoin', 'quoit', 'quota', 'quote', 'rabat', 'rabbi', 'rabid', 'racer', 'racks', 'racon', 'radar', 'radio', 'radix', 'radon', 'rafts', 'ragee', 'rages', 'ragis', 'raids', 'rails', 'rainy', 'raise', 'rajab', 'rajah', 'rakes', 'rales', 'rally', 'ramee', 'ramie', 'ramps', 'ramus', 'ranch', 'rands', 'randy', 'ranee', 'range', 'rangy', 'ranid', 'ranis', 'ranks', 'rants', 'raped', 'raper', 'rapes', 'raphe', 'rapid', 'rases', 'rasps', 'raspy', 'ratan', 'ratch', 'ratel', 'rates', 'ratio', 'ratty', 'ravel', 'raven', 'raver', 'raves', 'rayon', 'razed', 'razes', 'razor', 'reach', 'react', 'reads', 'ready', 'realm', 'reams', 'reaps', 'rearm', 'rears', 'reata', 'reave', 'rebel', 'rebus', 'rebut', 'recap', 'recce', 'recco', 'reccy', 'recto', 'recur', 'redes', 'redly', 'redos', 'redox', 'redux', 'reeds', 'reedy', 'reefs', 'reefy', 'reeks', 'reels', 'reeve', 'refer', 'refit', 'regal', 'regur', 'reich', 'reify', 'reign', 'rejig', 'relax', 'relay', 'relic', 'remit', 'remus', 'renal', 'rends', 'renew', 'renin', 'rente', 'rents', 'repay', 'repel', 'reply', 'repot', 'repps', 'rerun', 'reset', 'resew', 'resid', 'resin', 'rests', 'retch', 'retem', 'retie', 'retro', 'retry', 'reuse', 'revel', 'revet', 'revue', 'rexes', 'rheas', 'rhein', 'rheum', 'rhine', 'rhino', 'rhomb', 'rhumb', 'rhyme', 'rials', 'riant', 'riata', 'ribes', 'ricer', 'rices', 'ricin', 'ricks', 'rider', 'rides', 'ridge', 'riels', 'riffs', 'rifle', 'rifts', 'rigel', 'right', 'rigid', 'rigor', 'riled', 'riles', 'riley', 'rills', 'rimas', 'rimed', 'rimes', 'rinds', 'rings', 'rinks', 'rinse', 'riots', 'ripen', 'ripes', 'risen', 'riser', 'risks', 'risky', 'rites', 'ritzy', 'rival', 'river', 'rives', 'rivet', 'riyal', 'roach', 'roads', 'roams', 'roans', 'roars', 'roast', 'robed', 'robes', 'robin', 'roble', 'robot', 'rocks', 'rocky', 'rodeo', 'rogue', 'roils', 'roily', 'roles', 'rollo', 'rolls', 'roman', 'romeo', 'romps', 'rondo', 'roods', 'roofs', 'roofy', 'rooks', 'rooms', 'roomy', 'roost', 'roots', 'roper', 'ropes', 'ropey', 'roses', 'rosin', 'rotas', 'rotes', 'rotls', 'rotor', 'roues', 'rouge', 'rough', 'round', 'rouse', 'route', 'routs', 'rover', 'roves', 'rowan', 'rowdy', 'rowel', 'rower', 'royal', 'rubes', 'rubia', 'ruble', 'rubor', 'rubus', 'rucks', 'rudds', 'ruddy', 'ruffs', 'rugby', 'ruins', 'ruled', 'ruler', 'rumba', 'rumen', 'rumex', 'rummy', 'rumor', 'rumps', 'runch', 'runes', 'rungs', 'runic', 'runny', 'runts', 'runty', 'rupee', 'rural', 'ruses', 'rushy', 'rusks', 'rusts', 'rusty', 'ruths', 'rutty', 'sabal', 'saber', 'sabin', 'sable', 'sabot', 'sabra', 'sabre', 'sacks', 'sades', 'sadhe', 'sadhu', 'sadly', 'safar', 'safes', 'sages', 'sagos', 'sahib', 'saids', 'saiga', 'sails', 'saint', 'sakes', 'sakis', 'sakti', 'salad', 'salal', 'salat', 'salem', 'sales', 'salix', 'sally', 'salmi', 'salmo', 'salol', 'salon', 'salpa', 'salps', 'salsa', 'salty', 'salve', 'salvo', 'saman', 'samba', 'samen', 'samoa', 'sands', 'sandy', 'sanes', 'santa', 'sapid', 'sappy', 'sarah', 'saran', 'sards', 'saree', 'sarin', 'sassy', 'satan', 'sates', 'satin', 'satyr', 'sauce', 'saucy', 'saudi', 'sauls', 'sauna', 'saury', 'saute', 'saved', 'saver', 'saves', 'savin', 'savor', 'savoy', 'savvy', 'sawan', 'saxes', 'saxon', 'scabs', 'scads', 'scags', 'scald', 'scale', 'scalp', 'scaly', 'scamp', 'scams', 'scans', 'scant', 'scape', 'scare', 'scarf', 'scarp', 'scars', 'scary', 'scats', 'scaup', 'scend', 'scene', 'scent', 'schmo', 'schwa', 'scion', 'scoff', 'scoke', 'scold', 'scone', 'scoop', 'scoot', 'scope', 'score', 'scorn', 'scots', 'scott', 'scour', 'scout', 'scowl', 'scows', 'scrag', 'scram', 'scrap', 'scree', 'screw', 'scrim', 'scrip', 'scrod', 'scrub', 'scrum', 'scuba', 'scuds', 'scuff', 'scull', 'scums', 'scups', 'scurf', 'scute', 'scuts', 'seals', 'seams', 'seamy', 'sears', 'seats', 'sebum', 'sects', 'sedan', 'seder', 'sedge', 'sedgy', 'sedum', 'seeds', 'seedy', 'seeks', 'seels', 'seems', 'seeps', 'seers', 'segno', 'segue', 'seine', 'seism', 'seize', 'selfs', 'sells', 'selva', 'semen', 'sends', 'senna', 'senor', 'sense', 'sents', 'seoul', 'sepal', 'sepia', 'septs', 'serer', 'seres', 'serfs', 'serge', 'serif', 'serin', 'serow', 'serra', 'serum', 'serve', 'servo', 'seton', 'setup', 'seven', 'sever', 'sewed', 'sewer', 'sexed', 'sexes', 'sexts', 'sfebe', 'shack', 'shade', 'shads', 'shady', 'shaft', 'shags', 'shahs', 'shake', 'shako', 'shaky', 'shale', 'shame', 'shams', 'shang', 'shank', 'shape', 'shard', 'share', 'shari', 'shark', 'sharp', 'shave', 'shawl', 'shawm', 'shawn', 'shaws', 'sheaf', 'shear', 'sheds', 'sheen', 'sheep', 'sheer', 'sheet', 'sheik', 'shelf', 'shell', 'shema', 'sherd', 'shews', 'shiah', 'shies', 'shift', 'shill', 'shims', 'shina', 'shine', 'shins', 'shiny', 'ships', 'shire', 'shirk', 'shirr', 'shirt', 'shits', 'shiva', 'shivs', 'shlep', 'shoal', 'shoat', 'shock', 'shoed', 'shoes', 'shogi', 'shoji', 'shona', 'shook', 'shoos', 'shoot', 'shops', 'shore', 'shorn', 'short', 'shote', 'shots', 'shout', 'shove', 'shows', 'showy', 'shred', 'shrew', 'shrub', 'shrug', 'shuck', 'shuns', 'shunt', 'shush', 'shute', 'shuts', 'shyly', 'sials', 'sibyl', 'sicks', 'sides', 'sidle', 'siege', 'sieve', 'sifts', 'sighs', 'sight', 'sigma', 'signs', 'sikhs', 'silds', 'silex', 'silks', 'silky', 'sills', 'silly', 'silos', 'silts', 'silty', 'silva', 'simal', 'simas', 'simon', 'since', 'sines', 'sinew', 'singe', 'sings', 'sinks', 'sinus', 'sioux', 'siren', 'sires', 'siris', 'sirup', 'sisal', 'sises', 'sissu', 'sissy', 'sitar', 'sites', 'sitka', 'sitta', 'siums', 'sivan', 'siwan', 'sixer', 'sixes', 'sixth', 'sixty', 'sized', 'sizes', 'skags', 'skate', 'skeat', 'skeet', 'skegs', 'skein', 'skeps', 'skews', 'skids', 'skier', 'skies', 'skiff', 'skill', 'skimp', 'skims', 'skink', 'skins', 'skint', 'skips', 'skirl', 'skirt', 'skits', 'skive', 'skuas', 'skulk', 'skull', 'skunk', 'slabs', 'slack', 'slags', 'slain', 'slake', 'slams', 'slang', 'slant', 'slaps', 'slash', 'slask', 'slate', 'slats', 'slaty', 'slave', 'slavs', 'slaws', 'slays', 'sleds', 'sleek', 'sleep', 'sleet', 'slews', 'slice', 'slick', 'slide', 'slime', 'slims', 'slimy', 'sling', 'slink', 'slips', 'slits', 'slobs', 'sloes', 'slogs', 'sloop', 'slope', 'slops', 'slosh', 'sloth', 'slots', 'slows', 'slubs', 'slues', 'slugs', 'slump', 'slums', 'slurp', 'slurs', 'slush', 'sluts', 'slyly', 'smack', 'small', 'smarm', 'smart', 'smash', 'smear', 'smell', 'smelt', 'smews', 'smile', 'smirk', 'smite', 'smith', 'smock', 'smogs', 'smoke', 'smoky', 'smuts', 'snack', 'snafu', 'snags', 'snail', 'snake', 'snaky', 'snaps', 'snare', 'snarl', 'snead', 'sneak', 'sneer', 'snick', 'snide', 'sniff', 'snipe', 'snips', 'snits', 'snobs', 'snoek', 'snood', 'snook', 'snoop', 'snoot', 'snore', 'snort', 'snots', 'snout', 'snows', 'snowy', 'snubs', 'snuff', 'snugs', 'soaks', 'soaps', 'soapy', 'soars', 'soave', 'sober', 'socks', 'socle', 'sodas', 'soddy', 'sodom', 'sofas', 'sofia', 'softs', 'softy', 'soggy', 'soils', 'sojas', 'solan', 'solar', 'solea', 'soled', 'soles', 'solfa', 'solid', 'solon', 'solos', 'solve', 'somas', 'sonar', 'sones', 'songs', 'sonic', 'sonny', 'sonsy', 'sooth', 'soots', 'sooty', 'sophs', 'sopor', 'soppy', 'sorbs', 'sores', 'sorex', 'sorgo', 'sorry', 'sorts', 'sorus', 'sotho', 'sough', 'souls', 'sound', 'soups', 'soupy', 'sours', 'souse', 'south', 'sower', 'soyas', 'space', 'spacy', 'spade', 'spain', 'spall', 'spang', 'spank', 'spare', 'spark', 'spars', 'spasm', 'spate', 'spats', 'spawl', 'spawn', 'spays', 'speak', 'spear', 'speck', 'specs', 'speed', 'speer', 'spell', 'spelt', 'spend', 'spent', 'sperm', 'spews', 'spica', 'spice', 'spick', 'spics', 'spicy', 'spiel', 'spies', 'spiff', 'spike', 'spiks', 'spiky', 'spile', 'spill', 'spine', 'spins', 'spiny', 'spire', 'spirt', 'spite', 'spits', 'spitz', 'spivs', 'splat', 'splay', 'split', 'spock', 'spode', 'spoil', 'spoke', 'spoof', 'spook', 'spool', 'spoon', 'spoor', 'spore', 'sport', 'spots', 'spout', 'sprag', 'sprat', 'spray', 'spree', 'sprig', 'sprit', 'sprue', 'spuds', 'spues', 'spume', 'spumy', 'spunk', 'spurn', 'spurs', 'spurt', 'squab', 'squad', 'squat', 'squaw', 'squib', 'squid', 'stabs', 'stack', 'staff', 'stage', 'stags', 'stagy', 'staid', 'stain', 'stair', 'stake', 'stale', 'stalk', 'stall', 'stamp', 'stand', 'staph', 'stare', 'stark', 'starr', 'stars', 'start', 'stash', 'state', 'stave', 'stays', 'stead', 'steak', 'steal', 'steam', 'steed', 'steel', 'steen', 'steep', 'steer', 'stein', 'stela', 'stele', 'stems', 'stent', 'steps', 'stern', 'stets', 'stews', 'stick', 'sties', 'stiff', 'stile', 'still', 'stilt', 'sting', 'stink', 'stint', 'stipe', 'stirk', 'stirs', 'stoat', 'stobs', 'stock', 'stoep', 'stogy', 'stoic', 'stoke', 'stole', 'stoma', 'stomp', 'stone', 'stony', 'stool', 'stoop', 'stops', 'store', 'stork', 'storm', 'story', 'stoup', 'stout', 'stove', 'stows', 'strad', 'strap', 'straw', 'stray', 'strep', 'strew', 'stria', 'strip', 'strix', 'strop', 'strum', 'strut', 'stubs', 'stuck', 'studs', 'study', 'stuff', 'stump', 'stung', 'stuns', 'stunt', 'stupa', 'stupe', 'styes', 'style', 'stymy', 'suave', 'sucre', 'sudan', 'sudor', 'sudra', 'sudsy', 'suede', 'suers', 'suets', 'suety', 'sugar', 'sugis', 'suite', 'suits', 'sulfa', 'sulks', 'sulky', 'sulla', 'sully', 'sumac', 'sumos', 'sumps', 'sunna', 'sunni', 'sunny', 'sunup', 'suomi', 'super', 'supra', 'suras', 'surds', 'sures', 'surfs', 'surge', 'surly', 'surya', 'sushi', 'sussy', 'sutra', 'swabs', 'swage', 'swags', 'swain', 'swale', 'swami', 'swamp', 'swank', 'swans', 'swaps', 'sward', 'swarm', 'swart', 'swash', 'swath', 'sways', 'swazi', 'swear', 'sweat', 'swede', 'sweep', 'sweet', 'swell', 'swept', 'swift', 'swigs', 'swill', 'swims', 'swine', 'swing', 'swipe', 'swirl', 'swish', 'swiss', 'swobs', 'swoon', 'swoop', 'swops', 'sword', 'sworn', 'swosh', 'swots', 'sylph', 'sylva', 'syncs', 'synod', 'syria', 'syrup', 'tabby', 'tabes', 'tabis', 'table', 'taboo', 'tabor', 'tacca', 'tachs', 'tacit', 'tacks', 'tacky', 'tacos', 'tacts', 'taels', 'taffy', 'tagus', 'tails', 'taint', 'tajik', 'taken', 'taker', 'takes', 'takin', 'talas', 'talcs', 'talks', 'talky', 'tally', 'talon', 'talus', 'tamal', 'tamed', 'tamer', 'tames', 'tamil', 'tammy', 'tampa', 'tamps', 'tamus', 'tandy', 'tanga', 'tango', 'tangs', 'tangy', 'tanka', 'tanks', 'tansy', 'taped', 'taper', 'tapes', 'tapir', 'tapis', 'tappa', 'tardy', 'tares', 'tarns', 'taros', 'tarot', 'tarps', 'tarry', 'tarts', 'tasks', 'tasse', 'taste', 'tasty', 'tatar', 'tater', 'tates', 'tatou', 'tatty', 'taunt', 'taupe', 'tauts', 'tawny', 'tawse', 'taxer', 'taxes', 'taxis', 'taxon', 'taxus', 'tayra', 'teach', 'teaks', 'teals', 'teams', 'tears', 'teary', 'tease', 'teats', 'tebet', 'techy', 'teddy', 'teems', 'teens', 'teeny', 'teeth', 'teffs', 'teiid', 'telex', 'tells', 'telly', 'tempo', 'temps', 'tempt', 'tench', 'tends', 'tenet', 'tenia', 'tenno', 'tenon', 'tenor', 'tense', 'tenth', 'tents', 'tepal', 'tepee', 'tepid', 'teras', 'terce', 'teres', 'terms', 'terns', 'terry', 'terse', 'tesla', 'testa', 'tests', 'testy', 'teths', 'teton', 'tetra', 'texan', 'texas', 'texts', 'thane', 'thank', 'thats', 'thaws', 'theca', 'theft', 'theme', 'thens', 'there', 'therm', 'theta', 'thick', 'thief', 'thigh', 'thill', 'thing', 'think', 'thins', 'third', 'thole', 'thong', 'thorn', 'three', 'thrip', 'throb', 'throe', 'throw', 'thrum', 'thuds', 'thugs', 'thuja', 'thule', 'thumb', 'thump', 'thyme', 'tiara', 'tiber', 'tibet', 'tibia', 'tical', 'ticks', 'tidal', 'tides', 'tiers', 'tiffs', 'tifli', 'tiger', 'tight', 'tigon', 'tikes', 'tilde', 'tiled', 'tiler', 'tiles', 'tilia', 'tills', 'tilth', 'tilts', 'timed', 'timer', 'times', 'timid', 'timor', 'tinct', 'tinea', 'tined', 'tines', 'tinge', 'tings', 'tinny', 'tints', 'tipis', 'tippy', 'tipsy', 'tired', 'tires', 'titan', 'titer', 'tithe', 'titis', 'title', 'titre', 'titty', 'titus', 'tizzy', 'toads', 'toady', 'toast', 'today', 'toddy', 'todea', 'todus', 'toffs', 'toffy', 'tokay', 'token', 'tokes', 'tokyo', 'toles', 'tolls', 'tombs', 'tomes', 'tonal', 'toned', 'toner', 'tones', 'tonga', 'tongs', 'tonic', 'tonne', 'tonus', 'tools', 'toona', 'toons', 'tooth', 'topaz', 'topee', 'toper', 'topes', 'topic', 'topis', 'topos', 'toque', 'torah', 'torch', 'tores', 'torsk', 'torso', 'torte', 'torts', 'torus', 'total', 'totem', 'toter', 'totes', 'touch', 'tough', 'tours', 'touts', 'towel', 'tower', 'towns', 'towny', 'toxic', 'toxin', 'toyon', 'trace', 'track', 'tract', 'tracy', 'trade', 'trail', 'train', 'trait', 'tramp', 'trams', 'trapa', 'trash', 'trave', 'trawl', 'trays', 'tread', 'treat', 'treed', 'trees', 'treks', 'trema', 'trend', 'trent', 'tress', 'trews', 'treys', 'triad', 'trial', 'tribe', 'trice', 'trick', 'tried', 'trier', 'tries', 'triga', 'trigs', 'trike', 'trill', 'trims', 'trine', 'tripe', 'trips', 'trite', 'troat', 'troll', 'troop', 'trope', 'troth', 'trots', 'trout', 'trove', 'troys', 'truce', 'truck', 'trues', 'truly', 'trump', 'trunk', 'truss', 'trust', 'truth', 'tryst', 'tsars', 'tsine', 'tsuga', 'tubal', 'tubas', 'tubby', 'tubed', 'tuber', 'tucks', 'tudor', 'tufas', 'tuffs', 'tufts', 'tulip', 'tulle', 'tulsa', 'tumid', 'tummy', 'tumor', 'tunas', 'tuner', 'tunes', 'tunga', 'tungs', 'tunic', 'tunis', 'tunny', 'tupek', 'tupik', 'turds', 'turfs', 'turki', 'turks', 'turns', 'turps', 'tushs', 'tusks', 'tutee', 'tutor', 'tuxes', 'tuxub', 'twain', 'twang', 'twats', 'tweak', 'tweed', 'tweet', 'twerp', 'twice', 'twigs', 'twill', 'twine', 'twins', 'twirl', 'twirp', 'twist', 'twits', 'tyche', 'tying', 'tykes', 'tyler', 'tynes', 'types', 'typha', 'typic', 'typos', 'tyres', 'tyros', 'tzars', 'udder', 'uglis', 'ugric', 'uigur', 'ukase', 'ulama', 'ulcer', 'ulema', 'ulmus', 'ulnar', 'ulnas', 'ultra', 'ulvas', 'umbel', 'umber', 'umbos', 'umbra', 'unais', 'unarm', 'unary', 'unaus', 'unbar', 'unbox', 'uncle', 'uncos', 'uncus', 'uncut', 'under', 'undue', 'unfed', 'unfit', 'uniat', 'unify', 'union', 'unite', 'units', 'unity', 'unlax', 'unlit', 'unman', 'unpin', 'unsay', 'unsex', 'untie', 'until', 'unwed', 'unzip', 'upend', 'upper', 'upset', 'upupa', 'urate', 'urban', 'ureas', 'urges', 'uriah', 'urial', 'urine', 'ursus', 'usage', 'users', 'ushas', 'usher', 'using', 'usnea', 'usual', 'usurp', 'usury', 'uteri', 'utile', 'utter', 'uveal', 'uveas', 'uvula', 'uzbak', 'uzbeg', 'uzbek', 'vagal', 'vague', 'vagus', 'vajra', 'vales', 'valet', 'valid', 'valmy', 'valor', 'valse', 'value', 'valve', 'vamps', 'vanda', 'vaned', 'vanes', 'vanir', 'vapid', 'vapor', 'varan', 'varix', 'varna', 'varus', 'vases', 'vasts', 'vatic', 'vault', 'vaunt', 'veals', 'vedic', 'veers', 'veery', 'vegan', 'veils', 'veins', 'velar', 'velds', 'veldt', 'velum', 'venal', 'vends', 'venom', 'vents', 'venue', 'venus', 'vepse', 'verbs', 'verdi', 'verge', 'verpa', 'verse', 'verso', 'verst', 'vertu', 'verve', 'vespa', 'vesta', 'vests', 'vetch', 'vexed', 'vexer', 'vexes', 'vials', 'viand', 'vibes', 'vicar', 'vices', 'vichy', 'vicia', 'video', 'vidua', 'views', 'vigil', 'vigor', 'villa', 'vinca', 'vines', 'vinos', 'vinyl', 'viola', 'viols', 'viper', 'viral', 'vireo', 'virga', 'virgo', 'virtu', 'virus', 'visas', 'vises', 'visit', 'visod', 'visor', 'vista', 'vital', 'vitis', 'vivas', 'vivid', 'vixen', 'vizor', 'vocal', 'vodka', 'vogue', 'vogul', 'voice', 'voids', 'voile', 'volar', 'voles', 'volga', 'volta', 'volts', 'volva', 'vomer', 'vomit', 'voter', 'votes', 'vouch', 'vouge', 'vowel', 'vower', 'vroom', 'vulva', 'wacky', 'wader', 'wades', 'wadis', 'wafer', 'wafts', 'wager', 'wages', 'wagon', 'wahoo', 'waifs', 'wails', 'wains', 'waist', 'waits', 'waive', 'waken', 'waker', 'wakes', 'wales', 'walks', 'walls', 'wally', 'waltz', 'wands', 'wanes', 'wanly', 'wants', 'wapmo', 'wards', 'warms', 'warns', 'warps', 'warts', 'warty', 'washy', 'wasps', 'waste', 'watch', 'water', 'watts', 'waugh', 'wauls', 'waver', 'wawls', 'waxed', 'waxen', 'waxes', 'wayne', 'weald', 'weals', 'weans', 'wears', 'weary', 'weave', 'webby', 'weber', 'wedel', 'wedge', 'weeds', 'weedy', 'weeks', 'weeny', 'weeps', 'weepy', 'wefts', 'weigh', 'weird', 'weirs', 'wekas', 'welch', 'welds', 'wells', 'welsh', 'welts', 'wench', 'wends', 'wests', 'whack', 'whale', 'whams', 'whang', 'whaps', 'wharf', 'whats', 'wheal', 'wheat', 'wheel', 'whelk', 'whelm', 'whelp', 'whets', 'wheys', 'whiff', 'whigs', 'while', 'whims', 'whine', 'whins', 'whiny', 'whirl', 'whirr', 'whirs', 'whish', 'whisk', 'whist', 'white', 'whits', 'whizz', 'whole', 'whomp', 'whoop', 'whops', 'whore', 'whorl', 'whose', 'wicca', 'wicks', 'widen', 'wides', 'widow', 'width', 'wield', 'wifes', 'wight', 'wilds', 'wiles', 'wince', 'winch', 'winds', 'windy', 'wines', 'winey', 'wings', 'winks', 'wiper', 'wipes', 'wired', 'wirer', 'wires', 'wises', 'wisps', 'wispy', 'witch', 'withe', 'withy', 'witty', 'wizen', 'woads', 'woden', 'wolfs', 'wolof', 'woman', 'wombs', 'wonky', 'wonts', 'woods', 'woody', 'wooer', 'woofs', 'woolf', 'wools', 'wooly', 'woosh', 'woozy', 'words', 'wordy', 'works', 'world', 'wormy', 'worry', 'worse', 'worst', 'worth', 'worts', 'wospy', 'wound', 'woven', 'wrack', 'wraps', 'wrath', 'wrawl', 'wreak', 'wreck', 'wrest', 'wrick', 'wries', 'wring', 'wrist', 'write', 'writs', 'wrong', 'wroth', 'wryly', 'xenon', 'xeric', 'xerox', 'xviii', 'xxiii', 'xylem', 'xylol', 'xyris', 'yacca', 'yacht', 'yacks', 'yagis', 'yahoo', 'yakut', 'yanan', 'yangs', 'yanks', 'yards', 'yarns', 'yaups', 'yawls', 'yawns', 'yawps', 'yazoo', 'yearn', 'years', 'yeast', 'yells', 'yelps', 'yemen', 'yenta', 'yeses', 'yetis', 'yield', 'ylems', 'yobbo', 'yodel', 'yodhs', 'yogic', 'yogis', 'yokel', 'yokes', 'yolks', 'yores', 'young', 'youth', 'yowls', 'yquem', 'yuans', 'yucca', 'yucky', 'yukon', 'yules', 'yuman', 'yummy', 'yurts', 'yussa', 'zaire', 'zakat', 'zaman', 'zamia', 'zapus', 'zarfs', 'zayin', 'zeals', 'zebra', 'zensu', 'zeros', 'zests', 'zesty', 'zetas', 'zilch', 'zills', 'zincs', 'zings', 'zippy', 'zitis', 'zloty', 'zombi', 'zonal', 'zones', 'zooid', 'zooms', 'zoril', 'zunis'];
+const guessArray5 = [{row: ['','','','',''], color: ['white','white','white','white','white']}];
+const guessArray4 = [{row: ['','','',''], color: ['white','white','white','white']}];
+const guessArray3 = [{row: ['','',''], color: ['white','white','white']}];
+export default class App extends Component {
+
+    state = {
+        homeMenuPage: 'block',
+        wordleSettingsPage: 'none',
+        originalWordlePage: 'none',
+        originalWordlePage4: 'none',
+        originalWordlePage3: 'none',
+        wordleRules: 'none',
+        overlay: 'none',
+        randomWord: '',
+        wordLength: 5,
+        guesses: 6,
+        games: 1,
+        currentRow: 0,
+        currentCol: 0,
+        
+        selectedL3: 'white',
+        selectedL4: 'white',
+        selectedL5: '#deebcc',
+        
+        selectedG1: '#deebcc',
+        selectedG2: 'white',
+        selectedG3: 'white',
+        selectedG4: 'white',
+        
+        resultColor: '',
+        endMessege: '',
+        
+        showGuessArray5: 
+        [
+            {row: ['','','','',''], color: ['white','white','white','white','white']}
+        ],
+        showGuessArray4: 
+        [
+            {row: ['','','',''], color: ['white','white','white','white']}
+        ],
+        showGuessArray3: 
+        [
+            {row: ['','',''], color: ['white','white','white']}
+        ],
+        
+        letters1Row: [
+            {letter: 'Q'},
+            {letter: 'W'},
+            {letter: 'E'},
+            {letter: 'R'},
+            {letter: 'T'},
+            {letter: 'Y'},
+            {letter: 'U'},
+            {letter: 'I'},
+            {letter: 'O'},
+            {letter: 'P'},
+        ],
+        letters2Row: [
+            {letter: 'A'},
+            {letter: 'S'},
+            {letter: 'D'},
+            {letter: 'F'},
+            {letter: 'G'},
+            {letter: 'H'},
+            {letter: 'J'},
+            {letter: 'K'},
+            {letter: 'L'},
+        ],
+        letters3Row: [
+            {letter: 'Z'},
+            {letter: 'X'},
+            {letter: 'C'},
+            {letter: 'V'},
+            {letter: 'B'},
+            {letter: 'N'},
+            {letter: 'M'},
+        ]
+    }
+    handleWordlePagePress = () => this.setState(state => ({
+        homeMenuPage: 'none',
+        originalWordlePage: 'block',
+    }));
+    handleWordlePagePress4 = () => this.setState(state => ({
+        homeMenuPage: 'none',
+        originalWordlePage4: 'block',
+    }));
+    handleWordlePagePress3 = () => this.setState(state => ({
+        homeMenuPage: 'none',
+        originalWordlePage3: 'block',
+    }));
+    handleWordleSettingsPagePress = () => this.setState(state => ({
+        homeMenuPage: 'none',
+        wordleSettingsPage: 'block',
+    }));
+    handleWordleRulesPagePress = () => this.setState(state => ({
+        homeMenuPage: 'none',
+        wordleRules: 'block',
+    }));
+    handleWordle5Back = () => {
+        guessArray5 = [{row: ['','','','',''], color: ['white','white','white','white','white']}];
+        this.setState(state => ({
+        homeMenuPage: 'block',
+        originalWordlePage: 'none',
+        currentRow: 0,
+        currentCol: 0,
+        }));
+    }
+    handleWordle4Back = () => {
+        guessArray4 = [{row: ['','','',''], color: ['white','white','white','white']}];
+        this.setState(state => ({
+        homeMenuPage: 'block',
+        originalWordlePage4: 'none',
+        currentRow: 0,
+        currentCol: 0,
+        }));
+    }
+    handleWordle3Back = () => {
+        guessArray3 = [{row: ['','',''], color: ['white','white','white']}];
+        this.setState(state => ({
+        homeMenuPage: 'block',
+        originalWordlePage3: 'none',
+        currentRow: 0,
+        currentCol: 0,
+        }));
+    }
+    handleSettingsBack = () => this.setState(state => ({
+        homeMenuPage: 'block',
+        wordleSettingsPage: 'none',
+    }));
+    handleRulesBack = () => this.setState(state => ({
+        homeMenuPage: 'block',
+        wordleRules: 'none',
+    }));
+    handlePlayAgainPress = () => {
+        this.setState(state => ({
+            overlay: 'none',
+            currentRow: 0,
+            currentCol: 0,
+        }))
+        guessArray5 = [{row: ['','','','',''], color: ['white','white','white','white','white']}];
+        guessArray4 = [{row: ['','','',''], color: ['white','white','white','white']}];
+        guessArray3 = [{row: ['','',''], color: ['white','white','white']}];
+        this.gameStart();
+    }
+    handleMenuPress = () => {
+        this.setState(state => ({
+            overlay: 'none',
+            homeMenuPage: 'block',
+            currentRow: 0,
+            currentCol: 0,
+        }))
+        guessArray5 = [{row: ['','','','',''], color: ['white','white','white','white','white']}];
+        guessArray4 = [{row: ['','','',''], color: ['white','white','white','white']}];
+        guessArray3 = [{row: ['','',''], color: ['white','white','white']}];
+    }
+
+    _handleTextChange = guess => {
+        this.setState({ guess });
+    };
+    _handleTextChange = guesses => {
+        this.setState({ guesses });
+    };
+    outcome = (arr) => {
+        let newStr = this.state.randomWord.toUpperCase();
+        let str = newStr.split("");
+            if(str == arr[this.state.currentRow].row)
+                {
+                    this.setState(state => ({
+                        overlay: 'block',
+                        originalWordlePage: 'none',
+                        originalWordlePage3: 'none',
+                        originalWordlePage4: 'none',
+                        resultColor: '#60a370',
+                        endMessege: 'Congrats you guessed Correctly',
+                    }))
+                }
+            else if(arr.length-1 == this.state.currentRow)
+                {
+                    this.setState(state => ({
+                        overlay: 'block', 
+                        originalWordlePage: 'none',
+                        originalWordlePage3: 'none',
+                        originalWordlePage4: 'none',
+                        resultColor: '#ba0600',
+                        endMessege: 'Wrong, how unfortunate'
+                    }))
+                }
+    };
+    rGWord = () => {
+      if(this.state.wordLength == 5)
+      {
+          this.setState(state => ({
+                randomWord: words[Math.floor(Math.random() *(words.length))]
+            }))
+      }
+      else if(this.state.wordLength == 4)
+      {
+          this.setState(state => ({
+                randomWord: fourLetterWords[Math.floor(Math.random() *(fourLetterWords.length))]
+            }))
+      }
+      else if(this.state.wordLength == 3)
+      {
+          this.setState(state => ({
+                randomWord: threeLetterWords[Math.floor(Math.random() *(threeLetterWords.length))]
+            }))
+      }
+    };
+    gameStart = () =>  {
+        this.rGWord();
+        let i = this.state.guesses;
+        if(this.state.wordLength == 5)
+        {
+            while(i > 1 )
+            {
+                guessArray5.splice(1, 0, 
+                    {row: ['','','','',''], color: ['white','white','white','white','white']})
+                i--;
+            }
+            this.setState(state => ({
+                showGuessArray5: guessArray5,
+            }))
+            this.handleWordlePagePress()
+        }
+        else if(this.state.wordLength == 4)
+        {
+            while(i > 1 )
+            {
+                guessArray4.splice(1, 0, 
+                    {row: ['','','',''], color: ['white','white','white','white']})
+                i--;
+            }
+            this.setState(state => ({
+                showGuessArray4: guessArray4,
+            }))
+            this.handleWordlePagePress4()
+        }
+        else if(this.state.wordLength == 3)
+        {
+            while(i > 1 )
+            {
+                guessArray3.splice(1, 0, 
+                    {row: ['','',''], color: ['white','white','white']})
+                i--;
+            }
+            this.setState(state => ({
+                showGuessArray3: guessArray3,
+            }))
+            this.handleWordlePagePress3()
+        }
+    };
+    addLetter = (letter) => {
+        if(this.state.wordLength == 5)
+        {
+            if(this.state.currentCol < 5){
+                guessArray5[this.state.currentRow].row[this.state.currentCol] =  letter;
+                this.setState(state => ({
+                    showGuessArray5: guessArray5,
+                    currentCol: this.state.currentCol + 1,
+                }))
+            }
+        }
+        else if(this.state.wordLength == 4)
+        {
+            if(this.state.currentCol < 4){
+                guessArray4[this.state.currentRow].row[this.state.currentCol] =  letter;
+                this.setState(state => ({
+                    showGuessArray4: guessArray4,
+                    currentCol: this.state.currentCol + 1,
+                }))
+            }
+        }
+        else if(this.state.wordLength == 3)
+        {
+            if(this.state.currentCol < 3){
+                guessArray3[this.state.currentRow].row[this.state.currentCol] =  letter;
+                this.setState(state => ({
+                    showGuessArray3: guessArray3,
+                    currentCol: this.state.currentCol + 1,
+                }))
+            }
+        }
+    };
+    enter = () => {
+        if(this.state.wordLength == 5)
+        {
+            let word = guessArray5[this.state.currentRow].row.toString().replace(/,/g, '')
+            for(let i = 0; i < words.length; i++)
+                if(this.state.currentCol >= 5 && words[i].toUpperCase() == word)
+                {
+                    this.compareWord()
+                    this.outcome(guessArray5)
+                    this.setState(state => ({
+                        currentRow: this.state.currentRow + 1,
+                        currentCol: 0,
+                    }))
+                    break
+                }
+            
+        }
+        if(this.state.wordLength == 4)
+        {
+            let word = guessArray4[this.state.currentRow].row.toString().replace(/,/g, '')
+            for(let i = 0; i < fourLetterWords.length; i++)
+                if(this.state.currentCol >= 4 && fourLetterWords[i].toUpperCase() == word)
+                {
+                    this.outcome(guessArray4)
+                    this.compareWord()
+                    this.setState(state => ({
+                        currentRow: this.state.currentRow + 1,
+                        currentCol: 0,
+                    }))
+                }
+        }
+        if(this.state.wordLength == 3)
+        {
+            let word = guessArray3[this.state.currentRow].row.toString().replace(/,/g, '')
+            for(let i = 0; i < threeLetterWords.length; i++)
+                if(this.state.currentCol >= 3 && threeLetterWords[i].toUpperCase() == word)
+                {
+                    this.outcome(guessArray3)
+                    this.compareWord()
+                    this.setState(state => ({
+                        currentRow: this.state.currentRow + 1,
+                        currentCol: 0,
+                    }))
+                }
+        }
+    }
+    back = () => {
+        if(this.state.wordLength == 5)
+        {
+            if(this.state.currentCol >= 0){
+                guessArray5[this.state.currentRow].row[this.state.currentCol - 1] = '';
+                this.setState(state => ({
+                    showGuessArray5: guessArray5,
+                    currentCol: this.state.currentCol - 1,
+                }))
+            }
+        }
+        if(this.state.wordLength == 4)
+        {
+            if(this.state.currentCol >= 0){
+                guessArray4[this.state.currentRow].row[this.state.currentCol - 1] = '';
+                this.setState(state => ({
+                    showGuessArray4: guessArray4,
+                    currentCol: this.state.currentCol - 1,
+                }))
+            }
+        }
+        if(this.state.wordLength == 3)
+        {
+            if(this.state.currentCol >= 0){
+                guessArray3[this.state.currentRow].row[this.state.currentCol - 1] = '';
+                this.setState(state => ({
+                    showGuessArray3: guessArray3,
+                    currentCol: this.state.currentCol - 1,
+                }))
+            }
+        }
+    }
+    compareWord = () => {
+        if(this.state.wordLength == 5)
+        {   
+            let newStr = this.state.randomWord.toUpperCase();
+            let arr = newStr.split("");
+            for(let i = 0; i < 5; i++)
+            {
+                guessArray5[this.state.currentRow].color[i] = '#cccccc';
+                
+                if(arr[0] == guessArray5[this.state.currentRow].row[i] || arr[1] == guessArray5[this.state.currentRow].row[i] || arr[2] == guessArray5[this.state.currentRow].row[i] || arr[3] == guessArray5[this.state.currentRow].row[i] || arr[4] == guessArray5[this.state.currentRow].row[i])
+                {
+                    guessArray5[this.state.currentRow].color[i] = '#feffb8';
+                    this.setState(state => ({
+                    showGuessArray5: guessArray5,        
+                    }))
+                }
+                if(arr[i] == guessArray5[this.state.currentRow].row[i])
+                {
+                    guessArray5[this.state.currentRow].color[i] = '#90d494';
+                    this.setState(state => ({
+                    showGuessArray5: guessArray5,        
+                    }))
+                }
+            }
+            
+        }
+        else if(this.state.wordLength == 4)
+        {   
+            let newStr = this.state.randomWord.toUpperCase();
+            let arr = newStr.split("");
+            for(let i = 0; i < 4; i++)
+            {
+                guessArray4[this.state.currentRow].color[i] = '#cccccc';
+                
+                if(arr[0] == guessArray4[this.state.currentRow].row[i] || arr[1] == guessArray4[this.state.currentRow].row[i] || arr[2] == guessArray4[this.state.currentRow].row[i] || arr[3] == guessArray4[this.state.currentRow].row[i])
+                {
+                    guessArray4[this.state.currentRow].color[i] = '#feffb8';
+                    this.setState(state => ({
+                    showGuessArray4: guessArray4,        
+                    }))
+                }
+                if(arr[i] == guessArray4[this.state.currentRow].row[i])
+                {
+                    guessArray4[this.state.currentRow].color[i] = '#90d494';
+                    this.setState(state => ({
+                    showGuessArray5: guessArray4,        
+                    }))
+                }
+            }
+            
+        }
+        else if(this.state.wordLength == 3)
+        {   
+            let newStr = this.state.randomWord.toUpperCase();
+            let arr = newStr.split("");
+            for(let i = 0; i < 3; i++)
+            {
+                guessArray3[this.state.currentRow].color[i] = '#cccccc';
+                
+                if(arr[0] == guessArray3[this.state.currentRow].row[i] || arr[1] == guessArray3[this.state.currentRow].row[i] || arr[2] == guessArray3[this.state.currentRow].row[i])
+                {
+                    guessArray3[this.state.currentRow].color[i] = '#feffb8';
+                    this.setState(state => ({
+                    showGuessArray3: guessArray3,        
+                    }))
+                }
+                if(arr[i] == guessArray3[this.state.currentRow].row[i])
+                {
+                    guessArray3[this.state.currentRow].color[i] = '#90d494';
+                    this.setState(state => ({
+                    showGuessArray3: guessArray3,        
+                    }))
+                }
+            }
+            
+        }
+    }
+    changeWordLength = (value) => {
+        if(value == 3){
+            this.setState(state=> ({
+                wordLength: 3,
+                selectedL3: '#deebcc',
+                selectedL4: 'white',
+                selectedL5: 'white',
+            }))
+        }
+        else if(value == 4){
+            this.setState(state=> ({
+                wordLength: 4,
+                selectedL3: 'white',
+                selectedL4: '#deebcc',
+                selectedL5: 'white',
+            }))
+        }
+        else if(value == 5){
+            this.setState(state=> ({
+                wordLength: 5,
+                selectedL3: 'white',
+                selectedL4: 'white',
+                selectedL5: '#deebcc',
+            }))
+        }
+    };
+    
+     numGameSelect = (value) => {
+        if(value == 1){
+            this.setState(state=> ({
+                games: 1,
+                selectedG1: '#deebcc',
+                selectedG2: 'white',
+                selectedG3: 'white',
+                selectedG4: 'white',
+            }))
+        }
+        else if(value == 2){
+            this.setState(state=> ({
+                games: 2,
+                selectedG1: 'white',
+                selectedG2: '#deebcc',
+                selectedG3: 'white',
+                selectedG4: 'white',
+            }))
+        }
+        else if(value == 3){
+            this.setState(state=> ({
+                games: 3,
+                selectedG1: 'white',
+                selectedG2: 'white',
+                selectedG3: '#deebcc',
+                selectedG4: 'white',
+            }))
+        }
+        else if(value == 4){
+            this.setState(state=> ({
+                games: 4,
+                selectedG1: 'white',
+                selectedG2: 'white',
+                selectedG3: 'white',
+                selectedG4: '#deebcc',
+            }))
+        }
+    };
+    
+
+    render() {
+        return (
+            <View style={styles.container}>
+                <View style={{display: this.state.homeMenuPage}}>
+                    <View style={styles.homeMenuPageContainer}>
+                        <View style={styles.horizontalLine}>
+                        </View>
+                        <View style={styles.horizontalLine}>
+                        </View>
+                        <View style={styles.row}>
+                            <Text style={styles.menuTitleQ}>
+                                W
+                            </Text>
+                            <Text style={styles.menuTitle}>
+                                or
+                            </Text>
+                            <Text style={styles.menuTitleO}>
+                                d
+                            </Text>
+                            <Text style={styles.menuTitle}>
+                                le+
+                            </Text>
+                        </View>
+                        <View style={styles.horizontalLine}>
+                        </View>
+                        <View style={styles.horizontalLine}>
+                        </View>
+                        <View style={styles.versionContainer}>
+                            <TouchableHighlight style={styles.startAppButton}
+                                 onPress={this.gameStart}
+                            >
+                                <Text style={styles.originalWordleAppText}>
+                                    START
+                                </Text>
+                    
+                            </TouchableHighlight>
+                            
+                            <TouchableHighlight style={styles.settingsButton}
+                                onPress={this.handleWordleSettingsPagePress}
+                            >
+                                <Text style={{fontSize: deviceHeight/26}}>
+                                    Game Settings
+                                </Text>
+                            </TouchableHighlight>
+                            <TouchableHighlight style={styles.rulesButton}
+                                onPress={this. handleWordleRulesPagePress}
+                            >
+                                <Text style={{fontSize: deviceHeight/26}}>
+                                    Rules
+                                </Text>
+                            </TouchableHighlight>
+                        </View>
+                        
+                    </View>
+                </View>
+                
+                <View style={{display: this.state.originalWordlePage}}>
+                
+                    <View style={styles.wordleContainer}>
+                    
+                    <View style={{flexDirection: 'row',}}>
+                        <Text style={styles.menuTitleP}>
+                            Wordle+
+                        </Text>
+                        <TouchableHighlight style={{height: deviceHeight/30}}
+                                onPress={this.handleWordle5Back}
+                            >
+                                <Image
+                                    source={{ uri: 'https://codehs.com/uploads/b7422b5b0eaee5bfdb7d1019881f504f' }}
+                                    style={{ height: deviceHeight/28, width: deviceWidth/7.3 }}
+                                />
+                            
+                            </TouchableHighlight>
+                        </View>
+                        <View style={styles.sectionContainer}>
+                            <View style={styles.quadrentContainer}>
+                            <ScrollView>
+                                {this.state.showGuessArray5.map((letter) => (
+                                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                        <View style={{height: deviceHeight*4.5/7/7.4, width: deviceHeight*4.5/7/7.4, borderWidth: 2, marginTop: 8, marginRight: 8, backgroundColor: letter.color[0]}}>
+                                            <Text style={styles.guessSquaresText}>
+                                                {letter.row[0]}
+                                            </Text>
+                                            
+                                        </View>
+                                        <View style={{height: deviceHeight*4.5/7/7.4, width: deviceHeight*4.5/7/7.4, borderWidth: 2, marginTop: 8, marginRight: 8, backgroundColor: letter.color[1]}}>
+                                            <Text style={styles.guessSquaresText}>
+                                                {letter.row[1]}
+                                            </Text>
+                                            
+                                        </View>
+                                        <View style={{height: deviceHeight*4.5/7/7.4, width: deviceHeight*4.5/7/7.4, borderWidth: 2, marginTop: 8, marginRight: 8, backgroundColor: letter.color[2]}}>
+                                            <Text style={styles.guessSquaresText}>
+                                                {letter.row[2]}
+                                            </Text>
+                                            
+                                        </View>
+                                        <View style={{height: deviceHeight*4.5/7/7.4, width: deviceHeight*4.5/7/7.4, borderWidth: 2, marginTop: 8, marginRight: 8, backgroundColor: letter.color[3]}}>
+                                            <Text style={styles.guessSquaresText}>
+                                                {letter.row[3]}
+                                            </Text>
+                                            
+                                        </View>
+                                        <View style={{height: deviceHeight*4.5/7/7.4, width: deviceHeight*4.5/7/7.4, borderWidth: 2, marginTop: 8, marginRight: 8, backgroundColor: letter.color[4]}}>
+                                            <Text style={styles.guessSquaresText}>
+                                                {letter.row[4]}
+                                            </Text>
+                                            
+                                        </View>
+                                    </View>
+                                ))},
+                            </ScrollView>
+                            </View>
+                        </View>
+                        <View style={styles.letterContainer}>
+                            <View style={styles.letterRowContainer}>
+                                {this.state.letters1Row.map((letters) => (
+                                    <TouchableHighlight style={styles.letterButtton}
+                                        onPress={() => this.addLetter(letters.letter)}
+                                    >
+                                        <Text style={styles.paragraph}>
+                                            {letters.letter}
+                                        </Text>
+                                    
+                                    </TouchableHighlight>
+                                        
+                                ))}
+                            </View>
+                            <View style={styles.letterRowContainer}>
+                                {this.state.letters2Row.map((letters) => (
+                                    <TouchableHighlight style={styles.letterButtton}
+                                       onPress={() => this.addLetter(letters.letter)}
+                                    >
+                                        <Text style={styles.paragraph}>
+                                            {letters.letter}
+                                        </Text>
+                                    
+                                    </TouchableHighlight>
+                                        
+                                ))}
+                            </View>
+                            <View style={styles.letterRowContainer}>
+                                <TouchableHighlight style={styles.otherButtton}
+                                    onPress={() => this.enter()}
+                                >
+                                    <Text style={styles.paragraph}>
+                                        enter
+                                    </Text>
+                                
+                                </TouchableHighlight>
+                                {this.state.letters3Row.map((letters) => (
+                                    <TouchableHighlight style={styles.letterButtton}
+                                        onPress={() => this.addLetter(letters.letter)}
+                                    >
+                                        <Text style={styles.paragraph}>
+                                            {letters.letter}
+                                        </Text>
+                                    
+                                    </TouchableHighlight>
+                                    
+                                ))}
+                                <TouchableHighlight style={styles.otherButtton}
+                                    onPress={this.back}
+                                >
+                                    <Text style={styles.paragraph}>
+                                        Back
+                                    </Text>
+                                
+                                </TouchableHighlight>
+                            </View>
+                            
+                        </View>
+                        
+                    </View>
+                </View>
+                <View style={{display: this.state.originalWordlePage4}}>
+                    <View style={styles.wordleContainer}>
+                    <View style={{flexDirection: 'row',}}>
+                    
+                        <Text style={styles.menuTitleP}>
+                            Wordle+
+                        </Text>
+                        <TouchableHighlight style={{height: deviceHeight/21}}
+                                onPress={this.handleWordle4Back}
+                            >
+                                <Image
+                                    source={{ uri: 'https://codehs.com/uploads/b7422b5b0eaee5bfdb7d1019881f504f' }}
+                                    style={{ height: deviceHeight/28, width: deviceWidth/7.3 }}
+                                />
+                            
+                            </TouchableHighlight>
+                        </View>
+                        <View style={styles.sectionContainer}>
+                            <View style={styles.quadrentContainer}>
+                            <ScrollView>
+                                {this.state.showGuessArray4.map((letter) => (
+                                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                        <View style={{height: deviceHeight*4.5/7/7.4, width: deviceHeight*4.5/7/7.4, borderWidth: 2, marginTop: 8, marginRight: 8, backgroundColor: letter.color[0]}}>
+                                            <Text style={styles.guessSquaresText}>
+                                                {letter.row[0]}
+                                            </Text>
+                                            
+                                        </View>
+                                        <View style={{height: deviceHeight*4.5/7/7.4, width: deviceHeight*4.5/7/7.4, borderWidth: 2, marginTop: 8, marginRight: 8, backgroundColor: letter.color[1]}}>
+                                            <Text style={styles.guessSquaresText}>
+                                                {letter.row[1]}
+                                            </Text>
+                                            
+                                        </View>
+                                        <View style={{height: deviceHeight*4.5/7/7.4, width: deviceHeight*4.5/7/7.4, borderWidth: 2, marginTop: 8, marginRight: 8, backgroundColor: letter.color[2]}}>
+                                            <Text style={styles.guessSquaresText}>
+                                                {letter.row[2]}
+                                            </Text>
+                                            
+                                        </View>
+                                        <View style={{height: deviceHeight*4.5/7/7.4, width: deviceHeight*4.5/7/7.4, borderWidth: 2, marginTop: 8, marginRight: 8, backgroundColor: letter.color[3]}}>
+                                            <Text style={styles.guessSquaresText}>
+                                                {letter.row[3]}
+                                            </Text>
+                                            
+                                        </View>
+                                        
+                                    </View>
+                                ))},
+                            </ScrollView>
+                            </View>
+                        </View>
+                        <View style={styles.letterContainer}>
+                            <View style={styles.letterRowContainer}>
+                                {this.state.letters1Row.map((letters) => (
+                                    <TouchableHighlight style={styles.letterButtton}
+                                        onPress={() => this.addLetter(letters.letter)}
+                                    >
+                                        <Text style={styles.paragraph}>
+                                            {letters.letter}
+                                        </Text>
+                                    
+                                    </TouchableHighlight>
+                                        
+                                ))}
+                            </View>
+                            <View style={styles.letterRowContainer}>
+                                {this.state.letters2Row.map((letters) => (
+                                    <TouchableHighlight style={styles.letterButtton}
+                                       onPress={() => this.addLetter(letters.letter)}
+                                    >
+                                        <Text style={styles.paragraph}>
+                                            {letters.letter}
+                                        </Text>
+                                    
+                                    </TouchableHighlight>
+                                        
+                                ))}
+                            </View>
+                            <View style={styles.letterRowContainer}>
+                                <TouchableHighlight style={styles.otherButtton}
+                                    onPress={() => this.enter()}
+                                >
+                                    <Text style={styles.paragraph}>
+                                        enter
+                                    </Text>
+                                
+                                </TouchableHighlight>
+                                {this.state.letters3Row.map((letters) => (
+                                    <TouchableHighlight style={styles.letterButtton}
+                                        onPress={() => this.addLetter(letters.letter)}
+                                    >
+                                        <Text style={styles.paragraph}>
+                                            {letters.letter}
+                                        </Text>
+                                    
+                                    </TouchableHighlight>
+                                    
+                                ))}
+                                <TouchableHighlight style={styles.otherButtton}
+                                    onPress={this.back}
+                                >
+                                    <Text style={styles.paragraph}>
+                                        Back
+                                    </Text>
+                                
+                                </TouchableHighlight>
+                            </View>
+                            
+                        </View>
+                        
+                    </View>
+                </View>
+                <View style={{display: this.state.originalWordlePage3}}>
+                    <View style={styles.wordleContainer}>
+                    <View style={{flexDirection: 'row',}}>
+                        <Text style={styles.menuTitleP}>
+                            Wordle+
+                        </Text>
+                        <TouchableHighlight style={{height: deviceHeight/21}}
+                                onPress={this.handleWordle3Back}
+                            >
+                                <Image
+                                    source={{ uri: 'https://codehs.com/uploads/b7422b5b0eaee5bfdb7d1019881f504f' }}
+                                    style={{ height: deviceHeight/28, width: deviceWidth/7.3 }}
+                                />
+                            
+                            </TouchableHighlight>
+                        </View>
+                        <View style={styles.sectionContainer}>
+                            <View style={styles.quadrentContainer}>
+                            <ScrollView>
+                                {this.state.showGuessArray3.map((letter) => (
+                                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                        <View style={{height: deviceHeight*4.5/7/7.4, width: deviceHeight*4.5/7/7.4, borderWidth: 2, marginTop: 8, marginRight: 8, backgroundColor: letter.color[0]}}>
+                                            <Text style={styles.guessSquaresText}>
+                                                {letter.row[0]}
+                                            </Text>
+                                            
+                                        </View>
+                                        <View style={{height: deviceHeight*4.5/7/7.4, width: deviceHeight*4.5/7/7.4, borderWidth: 2, marginTop: 8, marginRight: 8, backgroundColor: letter.color[1]}}>
+                                            <Text style={styles.guessSquaresText}>
+                                                {letter.row[1]}
+                                            </Text>
+                                            
+                                        </View>
+                                        <View style={{height: deviceHeight*4.5/7/7.4, width: deviceHeight*4.5/7/7.4, borderWidth: 2, marginTop: 8, marginRight: 8, backgroundColor: letter.color[2]}}>
+                                            <Text style={styles.guessSquaresText}>
+                                                {letter.row[2]}
+                                            </Text>
+                                            
+                                        </View>
+                                        
+                                        
+                                    </View>
+                                ))},
+                            </ScrollView>
+                            </View>
+                        </View>
+                        <View style={styles.letterContainer}>
+                            <View style={styles.letterRowContainer}>
+                                {this.state.letters1Row.map((letters) => (
+                                    <TouchableHighlight style={styles.letterButtton}
+                                        onPress={() => this.addLetter(letters.letter)}
+                                    >
+                                        <Text style={styles.paragraph}>
+                                            {letters.letter}
+                                        </Text>
+                                    
+                                    </TouchableHighlight>
+                                        
+                                ))}
+                            </View>
+                            <View style={styles.letterRowContainer}>
+                                {this.state.letters2Row.map((letters) => (
+                                    <TouchableHighlight style={styles.letterButtton}
+                                       onPress={() => this.addLetter(letters.letter)}
+                                    >
+                                        <Text style={styles.paragraph}>
+                                            {letters.letter}
+                                        </Text>
+                                    
+                                    </TouchableHighlight>
+                                        
+                                ))}
+                            </View>
+                            <View style={styles.letterRowContainer}>
+                                <TouchableHighlight style={styles.otherButtton}
+                                    onPress={() => this.enter()}
+                                >
+                                    <Text style={styles.paragraph}>
+                                        enter
+                                    </Text>
+                                
+                                </TouchableHighlight>
+                                {this.state.letters3Row.map((letters) => (
+                                    <TouchableHighlight style={styles.letterButtton}
+                                        onPress={() => this.addLetter(letters.letter)}
+                                    >
+                                        <Text style={styles.paragraph}>
+                                            {letters.letter}
+                                        </Text>
+                                    
+                                    </TouchableHighlight>
+                                    
+                                ))}
+                                <TouchableHighlight style={styles.otherButtton}
+                                    onPress={this.back}
+                                >
+                                    <Text style={styles.paragraph}>
+                                        Back
+                                    </Text>
+                                
+                                </TouchableHighlight>
+                            </View>
+                            
+                        </View>
+                        
+                    </View>
+                </View>
+                <View style={{display: this.state.wordleRules}}>
+                    <View style={styles.settingsContainer}>
+                        <View style={{flexDirection: 'row',}}>
+                            <Text style={{fontSize: deviceHeight/18, marginBottom: deviceHeight/18, marginRight: deviceWidth/2.5, fontWeight: 'bold'}}>
+                                Rules
+                            </Text>
+                            <TouchableHighlight style={{marginTop: 8, height: deviceHeight/21}}
+                                onPress={this.handleRulesBack}
+                            >
+                                <Image
+                                    source={{ uri: 'https://codehs.com/uploads/b7422b5b0eaee5bfdb7d1019881f504f' }}
+                                    style={{ height: deviceHeight/28, width: deviceWidth/7.3 }}
+                                />
+                            
+                            </TouchableHighlight>
+                        </View>
+                        <View style={styles.rulesScroll}>
+                             <ScrollView>
+                                 <Text style={styles.rulesText}>
+                                ⚫ Each guess must be a valid five-letter word.
+                                </Text>
+                                <Text style={styles.rulesText}> </Text>
+                                <Text style={styles.rulesText}>
+                                ⚫ The color of a tile will change to show you how close your guess was.
+                                </Text>
+                                <Text style={styles.rulesText}> </Text>
+                                <Text style={styles.rulesText}>
+                                ⚫ If the tile turns green, the letter is in the word, and it is in the correct spot.
+                                </Text>
+                                <Text style={styles.rulesText}> </Text>
+                                <Text style={styles.rulesText}>
+                                ⚫ If the tile turns yellow, the letter is in the word, but it is not in the correct spot.
+                                </Text>
+                                <Text style={styles.rulesText}> </Text>
+                                <Text style={styles.rulesText}>
+                                ⚫ If the tile turns gray, the letter is not in the word.
+                                 </Text>
+                             </ScrollView>
+                        </View>
+                        
+                        
+                    </View>
+                </View> 
+                <View style={{display: this.state.wordleSettingsPage}}>
+                    <View style={styles.settingsContainer}>
+                        <View style={{flexDirection: 'row',}}>
+                            <Text style={{fontSize: deviceHeight/18, marginBottom: deviceHeight/18, marginRight: deviceWidth/2.5, fontWeight: 'bold'}}>
+                                Settings
+                            </Text>
+                            <TouchableHighlight style={{marginTop: 8, height: deviceHeight/21}}
+                                onPress={this.handleSettingsBack}
+                            >
+                                <Image
+                                    source={{ uri: 'https://codehs.com/uploads/b7422b5b0eaee5bfdb7d1019881f504f' }}
+                                    style={{ height: deviceHeight/28, width: deviceWidth/7.3 }}
+                                />
+                            
+                            </TouchableHighlight>
+                        </View>
+                        
+                            <Text style={{fontSize: deviceHeight/20, }}>
+                                Word Length
+                            </Text>
+                            <View style={styles.settingsLine}>
+                            </View>
+                        <View style={styles.optionsContainer}>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedL3}}
+                                onPress={() => this.changeWordLength(3)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    3
+                                </Text>
+                                
+                            </TouchableHighlight>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedL4}}
+                                onPress={() => this.changeWordLength(4)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    4
+                                </Text>
+                                
+                            </TouchableHighlight>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedL5}}
+                                onPress={() => this.changeWordLength(5)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    5
+                                </Text>
+                                
+                            </TouchableHighlight>
+                           
+                        </View>
+                            <Text style={{fontSize: deviceHeight/20, }}>
+                                Guesses
+                            </Text>
+                            <View style={styles.settingsLine}>
+                            </View>
+                        <View style={styles.optionsContainer}>
+                            <TextInput
+                                value={this.state.guesses}
+                                onChangeText={this._handleTextChange}
+                                maxLength={2}
+                                keyBoardType={'numeric'}
+                                
+                                style={{ width: deviceWidth/4, height: deviceWidth/4, padding: 8, borderWidth: 1, fontSize: deviceHeight/18, textAlign: 'center'}}
+                            />
+                            
+                        
+                        </View>
+                            <Text style={{fontSize: deviceHeight/20, }}>
+                                Words at a Time
+                            </Text>
+                            <View style={styles.settingsLine}>
+                            </View>
+                        <View style={styles.optionsContainer}>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedG1}}
+                                onPress={() => this.numGameSelect(1)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    1
+                                </Text>
+                                
+                            </TouchableHighlight>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedG2}}
+                                onPress={() => this.numGameSelect(2)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    2
+                                </Text>
+                                
+                            </TouchableHighlight>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedG3}}
+                                onPress={() => this.numGameSelect(3)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    3
+                                </Text>
+                                
+                            </TouchableHighlight>
+                            <TouchableHighlight style={{height: deviceWidth/5, width: deviceWidth/5, borderWidth: 4, marginRight: 14, borderRadius: 90, alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.selectedG4}}
+                                onPress={() => this.numGameSelect(4)}
+                            >
+                                <Text style={{fontSize: deviceHeight/22}}>
+                                    4
+                                </Text>
+                                
+                            </TouchableHighlight>
+                            
+                        </View>
+                        
+                    </View>
+                    
+                </View>
+                <View style={{display: this.state.overlay}}>
+                    <View style={styles.overlayContainer}>
+                        <View style={styles.overlay}>
+                            <Text style={{fontSize: deviceHeight/18, color: this.state.resultColor, fontWeight: 'bold'}}>
+                                {this.state.randomWord.toUpperCase()}
+                            </Text>
+                            <Text style={{fontSize: deviceHeight/34, color: this.state.resultColor, fontWeight: 'bold', marginTop: 40, marginBottom: 40}}>
+                                {this.state.endMessege}
+                            </Text>
+                            <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                <TouchableHighlight style={{height: deviceHeight/1.5/6, width: deviceWidth/1.2/3, backgroundColor: '#c9c9c9', borderWidth: 1, justifyContent: 'center', alignItems: 'center', borderRadius: 45, marginRight: 20}}
+                                    onPress={this.handlePlayAgainPress}
+                                >
+                                    <Text style={styles.paragraph}>
+                                        Play Again
+                                    </Text>
+                                
+                                </TouchableHighlight>
+                                <TouchableHighlight style={{height: deviceHeight/1.5/6, width: deviceWidth/1.2/3, backgroundColor: '#c9c9c9', borderWidth: 1, justifyContent: 'center', alignItems: 'center', borderRadius: 45}}
+                                    onPress={this.handleMenuPress}
+                                >
+                                    <Text style={styles.paragraph}>
+                                        Menu
+                                    </Text>
+                                
+                                </TouchableHighlight>
+                            
+                            </View>
+                            
+                        
+                        </View>
+                    
+                    </View>
+                </View>
+                
+            </View>
+        );
+    }
+}
+
+const styles = StyleSheet.create({
+    row:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f5f5f5',
+    },
+    homeMenuPageContainer: {
+        height: deviceHeight,
+        width: deviceWidth,
+        alignItems: 'center',
+        paddingTop: 30,
+    },
+    versionContainer: {
+        height: deviceHeight*2/3,
+        width: deviceWidth,
+        alignItems: 'center',
+        marginTop: 50,
+    },
+    wordleContainer: {
+        height: deviceHeight,
+        width: deviceWidth,
+        alignItems: 'center',
+        paddingTop: 30,
+    },
+    sectionContainer: {
+        flexDirection: 'row',
+        width: deviceWidth,
+        height: deviceHeight*4.5/7,
+        borderWidth: 1,
+    },
+    quadrentContainer: {
+        alignItems: 'center',
+        width: deviceWidth,
+        height: deviceHeight*4.5/7,
+        borderWidth: 1,
+    },
+    guessingRow: {
+        height: deviceHeight*5/7/2/5,
+        width: deviceWidth/2,
+        borderBottomWidth: 1,
+    },
+    guessSquares: {
+        height: deviceHeight*4.5/7/7.4,
+        width: deviceHeight*4.5/7/7.4,
+        borderWidth: 2,
+        marginTop: 8,
+        marginRight: 8,
+    },
+    guessSquaresText: {
+        fontSize: deviceHeight*4.5/7/7/1.5,
+        textAlign: 'center',
+        color: 'black',
+    },
+    letterContainer: {
+        height: deviceHeight/5.2,
+        width: deviceWidth/1.1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 8,
+    },
+    letterRowContainer: {
+        flexDirection: 'row',
+        height: deviceHeight/5.2/3,
+        width: deviceWidth/1.1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    letterButtton: {
+        height: deviceHeight/5.2/3,
+        width: deviceWidth/1.5/8,
+        backgroundColor: '#d4d4d4',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+        marginRight: 3,
+    },
+    otherButtton: {
+        height: deviceHeight/5.2/3,
+        width: deviceWidth/1.5/8*1.7,
+        backgroundColor: '#d4d4d4',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+         marginRight: 3,
+    },
+    startAppButton: {
+        height: deviceHeight/4,
+        width: deviceWidth*12/13,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#d4d4d4',
+        marginTop: deviceHeight/18,
+        borderRadius: 90,
+        
+    },
+    rulesButton: {
+        height: deviceHeight/8,
+        width: deviceWidth/3,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#d4d4d4',
+        marginTop: deviceHeight/20,
+        borderRadius: 90,
+        
+    },
+    settingsButton: {
+        height: deviceHeight/8,
+        width: deviceWidth*2/3,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#d4d4d4',
+        marginTop: deviceHeight/20,
+        borderRadius: 90,
+        
+    },
+    settingsContainer: 
+    {
+        height: deviceHeight,
+        width: deviceWidth,
+        paddingLeft: 8,
+    },
+    optionsContainer: {
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        height: deviceHeight/4,
+        width: deviceWidth,
+        
+    },
+    optionButton: {
+        height: deviceWidth/4, width: deviceWidth/4,
+    },
+    originalWordleAppText: {
+        fontSize: deviceHeight/20,
+    },
+    menuTitle: {
+        fontSize: deviceHeight/14,
+        fontFamily: 'verdana',
+        marginBottom: 9,
+        fontWeight: 'bold',
+    },
+    menuTitleP: {
+        fontSize: deviceHeight/20,
+        fontFamily: 'verdana',
+        marginBottom: 9,
+        fontWeight: 'bold',
+    },
+    menuTitleQ: {
+        fontSize: deviceHeight/14,
+        fontFamily: 'verdana',
+        marginBottom: 9,
+        fontWeight: 'bold',
+        color: '#7cbf8e',
+    },
+    menuTitleO: {
+        fontSize: deviceHeight/14,
+        fontFamily: 'verdana',
+        marginBottom: 9,
+        fontWeight: 'bold',
+        color: '#e0dd12',
+    },
+    originalWordlePageContainer: {
+        
+    },
+    horizontalLine: {
+        height: 1,
+        width: deviceWidth,
+        backgroundColor: 'black',
+        marginBottom: 5,
+    },
+    settingsLine: {
+        height: 1,
+        width: deviceWidth,
+        backgroundColor: 'black',
+    },
+     rulesScroll:{
+        height: deviceHeight/1.25,
+        width: deviceWidth-20,
+        borderWidth: 3,
+        borderColor: 'black',
+        
+    },
+    rulesText: {
+        fontSize: deviceHeight/23,
+        fontFamily:'Comic Sans MS',
+    },
+    overlayContainer: {
+        height: deviceHeight,
+        width: deviceWidth,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#dbdbdb',
+    },
+    overlay: {
+        height: deviceHeight/1.5,
+        width: deviceWidth/1.2,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        borderColor: 'black',
+        borderWidth: 1,
+    }
+});
