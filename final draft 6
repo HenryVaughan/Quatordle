@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, View, StyleSheet, Image, TextInput, ImageBackground, TouchableHighlight, Alert, Dimensions, ScrollView, useState } from 'react-native';
+import { AppRegistry, Text, View, StyleSheet, Image, TextInput, ImageBackground, TouchableHighlight, Alert, Dimensions, ScrollView, Modal } from 'react-native';
 import Constants from 'expo-constants';
 
 let deviceHeight = Dimensions.get('window').height;
@@ -628,6 +628,7 @@ export default class App extends Component {
         originalWordlePage4: 'none',
         originalWordlePage3: 'none',
         wordleRules: 'none',
+        overlay: 'none',
         randomWord: '',
         wordLength: 5,
         guesses: 6,
@@ -635,14 +636,17 @@ export default class App extends Component {
         currentRow: 0,
         currentCol: 0,
         
-        selectedL3: '#deebcc',
+        selectedL3: 'white',
         selectedL4: 'white',
-        selectedL5: 'white',
+        selectedL5: '#deebcc',
         
         selectedG1: '#deebcc',
         selectedG2: 'white',
         selectedG3: 'white',
         selectedG4: 'white',
+        
+        resultColor: '',
+        endMessege: '',
         
         showGuessArray5: 
         [
@@ -710,18 +714,33 @@ export default class App extends Component {
         homeMenuPage: 'none',
         wordleRules: 'block',
     }));
-    handleWordle5Back = () => this.setState(state => ({
+    handleWordle5Back = () => {
+        guessArray5 = [{row: ['','','','',''], color: ['white','white','white','white','white']}];
+        this.setState(state => ({
         homeMenuPage: 'block',
         originalWordlePage: 'none',
-    }));
-    handleWordle4Back = () => this.setState(state => ({
+        currentRow: 0,
+        currentCol: 0,
+        }));
+    }
+    handleWordle4Back = () => {
+        guessArray4 = [{row: ['','','',''], color: ['white','white','white','white']}];
+        this.setState(state => ({
         homeMenuPage: 'block',
         originalWordlePage4: 'none',
-    }));
-    handleWordle3Back = () => this.setState(state => ({
+        currentRow: 0,
+        currentCol: 0,
+        }));
+    }
+    handleWordle3Back = () => {
+        guessArray3 = [{row: ['','',''], color: ['white','white','white']}];
+        this.setState(state => ({
         homeMenuPage: 'block',
         originalWordlePage3: 'none',
-    }));
+        currentRow: 0,
+        currentCol: 0,
+        }));
+    }
     handleSettingsBack = () => this.setState(state => ({
         homeMenuPage: 'block',
         wordleSettingsPage: 'none',
@@ -730,12 +749,61 @@ export default class App extends Component {
         homeMenuPage: 'block',
         wordleRules: 'none',
     }));
+    handlePlayAgainPress = () => {
+        this.setState(state => ({
+            overlay: 'none',
+            currentRow: 0,
+            currentCol: 0,
+        }))
+        guessArray5 = [{row: ['','','','',''], color: ['white','white','white','white','white']}];
+        guessArray4 = [{row: ['','','',''], color: ['white','white','white','white']}];
+        guessArray3 = [{row: ['','',''], color: ['white','white','white']}];
+        this.gameStart();
+    }
+    handleMenuPress = () => {
+        this.setState(state => ({
+            overlay: 'none',
+            homeMenuPage: 'block',
+            currentRow: 0,
+            currentCol: 0,
+        }))
+        guessArray5 = [{row: ['','','','',''], color: ['white','white','white','white','white']}];
+        guessArray4 = [{row: ['','','',''], color: ['white','white','white','white']}];
+        guessArray3 = [{row: ['','',''], color: ['white','white','white']}];
+    }
 
     _handleTextChange = guess => {
         this.setState({ guess });
     };
     _handleTextChange = guesses => {
         this.setState({ guesses });
+    };
+    outcome = (arr) => {
+        let newStr = this.state.randomWord.toUpperCase();
+        let str = newStr.split("");
+        for(let i = 0; i < arr[this.state.currentRow].row.length; i++)
+            if(str[i] == arr[this.state.currentRow].row[i])
+                {
+                    this.setState(state => ({
+                        overlay: 'block',
+                        originalWordlePage: 'none',
+                        originalWordlePage3: 'none',
+                        originalWordlePage4: 'none',
+                        resultColor: '#60a370',
+                        endMessege: 'Congrats you guessed Correctly',
+                    }))
+                }
+            else if(arr.length-1 == this.state.currentRow)
+                {
+                    this.setState(state => ({
+                        overlay: 'block', 
+                        originalWordlePage: 'none',
+                        originalWordlePage3: 'none',
+                        originalWordlePage4: 'none',
+                        resultColor: '#ba0600',
+                        endMessege: 'Wrong, how unfortunate'
+                    }))
+                }
     };
     rGWord = () => {
       if(this.state.wordLength == 5)
@@ -840,10 +908,12 @@ export default class App extends Component {
                 if(this.state.currentCol >= 5 && words[i].toUpperCase() == word)
                 {
                     this.compareWord()
+                    this.outcome(guessArray5)
                     this.setState(state => ({
                         currentRow: this.state.currentRow + 1,
                         currentCol: 0,
                     }))
+                    break
                 }
             
         }
@@ -1107,10 +1177,12 @@ export default class App extends Component {
                 </View>
                 
                 <View style={{display: this.state.originalWordlePage}}>
+                
                     <View style={styles.wordleContainer}>
+                    
                     <View style={{flexDirection: 'row',}}>
                         <Text style={styles.menuTitleP}>
-                            Wordle+
+                            {this.state.randomWord}
                         </Text>
                         <TouchableHighlight style={{height: deviceHeight/30}}
                                 onPress={this.handleWordle5Back}
@@ -1596,6 +1668,40 @@ export default class App extends Component {
                     </View>
                     
                 </View>
+                <View style={{display: this.state.overlay}}>
+                    <View style={styles.overlayContainer}>
+                        <View style={styles.overlay}>
+                            <Text style={{fontSize: deviceHeight/18, color: this.state.resultColor, fontWeight: 'bold'}}>
+                                {this.state.randomWord.toUpperCase()}
+                            </Text>
+                            <Text style={{fontSize: deviceHeight/34, color: this.state.resultColor, fontWeight: 'bold', marginTop: 40, marginBottom: 40}}>
+                                {this.state.endMessege}
+                            </Text>
+                            <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                <TouchableHighlight style={{height: deviceHeight/1.5/6, width: deviceWidth/1.2/3, backgroundColor: '#c9c9c9', borderWidth: 1, justifyContent: 'center', alignItems: 'center', borderRadius: 45, marginRight: 20}}
+                                    onPress={this.handlePlayAgainPress}
+                                >
+                                    <Text style={styles.paragraph}>
+                                        Play Again
+                                    </Text>
+                                
+                                </TouchableHighlight>
+                                <TouchableHighlight style={{height: deviceHeight/1.5/6, width: deviceWidth/1.2/3, backgroundColor: '#c9c9c9', borderWidth: 1, justifyContent: 'center', alignItems: 'center', borderRadius: 45}}
+                                    onPress={this.handleMenuPress}
+                                >
+                                    <Text style={styles.paragraph}>
+                                        Menu
+                                    </Text>
+                                
+                                </TouchableHighlight>
+                            
+                            </View>
+                            
+                        
+                        </View>
+                    
+                    </View>
+                </View>
                 
             </View>
         );
@@ -1610,7 +1716,8 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        paddingTop: Constants.statusBarHeight,
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: '#f5f5f5',
     },
     homeMenuPageContainer: {
@@ -1792,5 +1899,20 @@ const styles = StyleSheet.create({
         fontSize: deviceHeight/23,
         fontFamily:'Comic Sans MS',
     },
-    
+    overlayContainer: {
+        height: deviceHeight,
+        width: deviceWidth,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#dbdbdb',
+    },
+    overlay: {
+        height: deviceHeight/1.5,
+        width: deviceWidth/1.2,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        borderColor: 'black',
+        borderWidth: 1,
+    }
 });
